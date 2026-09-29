@@ -1,0 +1,1053 @@
+---
+permalink: /tools/hedge-chain-lab/index.html
+eleventyExcludeFromCollections: true
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hedge Chain Lab — Basketbol.EU</title>
+  <meta name="description" content="Sequential combo hedging calculator by basketbol.eu">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; }
+    .tool-topbar {
+      background: #0a0e14;
+      color: #c9d1d9;
+      padding: 10px 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 1px solid #1f2937;
+      position: sticky; top: 0; z-index: 999;
+    }
+    .tool-topbar .tb-logo {
+      font-family: 'Oswald', Impact, sans-serif;
+      font-size: 16px;
+      letter-spacing: 3px;
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .tool-topbar .tb-logo span { color: #00e5c4; }
+    .tool-topbar .tb-sep { color: #5a6270; }
+    .tool-topbar a.tb-back {
+      color: #00e5c4;
+      text-decoration: none;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+    .tool-topbar a.tb-back:hover { color: #ffffff; }
+    .tool-topbar .tb-spacer { flex: 1; }
+    .tool-topbar .tb-meta {
+      color: #8b949e;
+      font-family: 'Courier New', monospace;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+<div class="tool-topbar">
+  <a href="/" class="tb-logo">BASKETBOL<span>.EU</span></a>
+  <span class="tb-sep">/</span>
+  <a href="/tools/" class="tb-back">← Analytical Tools</a>
+  <div class="tb-spacer"></div>
+  <div class="tb-meta">Hedge Chain Lab</div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     HEDGE CHAIN LAB
+     Sequential combo hedging calculator — basketbol.eu
+     Paste this entire block into a Blogger HTML page (HTML view).
+     ════════════════════════════════════════════════════════════════════ -->
+
+<style>
+/* Hide Blogger's default page title on this page */
+
+
+.hcl-root {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #0a0e14;
+    color: #c9d1d9;
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 0;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+    border: 1px solid #1f2937;
+}
+
+/* ═══ HEADER ═══ */
+.hcl-header {
+    background: linear-gradient(135deg, #0d1b2a 0%, #1b263b 100%);
+    padding: 30px 30px 25px 30px;
+    text-align: center;
+    border-bottom: 1px solid #1f2937;
+    position: relative;
+}
+.hcl-header::before {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, #00e5c4 50%, transparent 100%);
+}
+.hcl-badge {
+    display: inline-block;
+    background: rgba(0,229,196,0.1);
+    color: #00e5c4;
+    padding: 4px 14px;
+    border-radius: 4px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    border: 1px solid rgba(0,229,196,0.25);
+    text-transform: uppercase;
+}
+.hcl-header h1 {
+    color: #ffffff;
+    font-size: 2em;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin: 0 0 6px 0;
+}
+.hcl-header h1 span { color: #00e5c4; }
+.hcl-subtitle {
+    color: #8b949e;
+    font-size: 0.95em;
+    font-style: italic;
+    letter-spacing: 0.3px;
+}
+
+/* ═══ WORKFLOW INFO ═══ */
+.hcl-workflow {
+    background: rgba(245,158,11,0.06);
+    border-left: 3px solid #f59e0b;
+    margin: 20px 30px 0 30px;
+    padding: 14px 18px;
+    border-radius: 4px;
+    font-size: 0.88em;
+    line-height: 1.7;
+    color: #d4c5a8;
+}
+.hcl-workflow strong { color: #fbbf24; font-weight: 700; }
+.hcl-workflow-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-top: 10px;
+}
+.hcl-step {
+    background: rgba(0,0,0,0.25);
+    padding: 8px 10px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 0.82em;
+    color: #c9d1d9;
+}
+.hcl-step b { color: #00e5c4; display: block; font-size: 1.1em; margin-bottom: 2px; }
+
+/* ═══ CONTENT AREA ═══ */
+.hcl-body { padding: 25px 30px 30px 30px; }
+
+.hcl-match-card {
+    background: #0d1421;
+    border: 1px solid #1f2937;
+    border-radius: 10px;
+    padding: 20px 22px;
+    margin-bottom: 16px;
+}
+.hcl-match-card h2 {
+    color: #00e5c4;
+    font-size: 1em;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin: 0 0 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.hcl-match-num {
+    display: inline-block;
+    background: #00e5c4;
+    color: #0a0e14;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 24px;
+    font-size: 13px;
+    font-weight: 900;
+}
+.hcl-match-hint {
+    color: #8b949e;
+    font-size: 0.82em;
+    margin-bottom: 14px;
+    font-style: italic;
+}
+
+/* Market type toggle */
+.hcl-market-toggle {
+    display: flex;
+    gap: 8px;
+    background: #0a0e14;
+    padding: 4px;
+    border-radius: 6px;
+    border: 1px solid #1f2937;
+    margin-bottom: 14px;
+}
+.hcl-toggle-btn {
+    flex: 1;
+    background: transparent;
+    color: #8b949e;
+    border: none;
+    padding: 9px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85em;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+}
+.hcl-toggle-btn:hover { color: #c9d1d9; }
+.hcl-toggle-btn.active {
+    background: #00e5c4;
+    color: #0a0e14;
+    box-shadow: 0 2px 8px rgba(0,229,196,0.25);
+}
+
+/* Outcome rows */
+.hcl-outcomes { display: flex; flex-direction: column; gap: 10px; }
+.hcl-outcome {
+    display: grid;
+    grid-template-columns: 100px 1fr 140px;
+    gap: 12px;
+    align-items: center;
+    background: #0a0e14;
+    border: 1px solid #1f2937;
+    border-radius: 6px;
+    padding: 10px 14px;
+    transition: all 0.2s ease;
+}
+.hcl-outcome.selected {
+    border-color: #00e5c4;
+    background: rgba(0,229,196,0.05);
+    box-shadow: 0 0 0 1px rgba(0,229,196,0.2);
+}
+.hcl-outcome-label {
+    color: #c9d1d9;
+    font-weight: 600;
+    font-size: 0.92em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.hcl-radio-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #8b949e;
+    font-size: 0.82em;
+    cursor: pointer;
+}
+.hcl-radio-wrap input[type="radio"] {
+    accent-color: #00e5c4;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+.hcl-odds-input {
+    background: #0d1421;
+    color: #ffffff;
+    border: 1px solid #1f2937;
+    border-radius: 5px;
+    padding: 9px 12px;
+    font-size: 1em;
+    font-weight: 700;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.5px;
+    transition: border-color 0.2s ease;
+}
+.hcl-odds-input:focus {
+    outline: none;
+    border-color: #00e5c4;
+    box-shadow: 0 0 0 2px rgba(0,229,196,0.15);
+}
+.hcl-odds-input.combo-selected {
+    border-color: #00e5c4;
+    background: rgba(0,229,196,0.08);
+    color: #00e5c4;
+}
+
+/* Combo stake card */
+.hcl-stake-card {
+    background: linear-gradient(135deg, #1a1208 0%, #2a1f0a 100%);
+    border: 1px solid #f59e0b;
+    border-radius: 10px;
+    padding: 20px 22px;
+    margin-bottom: 18px;
+}
+.hcl-stake-card h2 {
+    color: #fbbf24;
+    font-size: 1em;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin: 0 0 14px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.hcl-stake-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    align-items: end;
+}
+.hcl-stake-field label {
+    display: block;
+    color: #d4c5a8;
+    font-size: 0.82em;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+.hcl-stake-input {
+    background: #0d1421;
+    color: #ffffff;
+    border: 1px solid #3f2f10;
+    border-radius: 5px;
+    padding: 11px 14px;
+    font-size: 1.1em;
+    font-weight: 800;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.5px;
+    transition: border-color 0.2s ease;
+}
+.hcl-stake-input:focus {
+    outline: none;
+    border-color: #fbbf24;
+    box-shadow: 0 0 0 2px rgba(251,191,36,0.15);
+}
+.hcl-combo-display {
+    background: #0a0e14;
+    padding: 11px 14px;
+    border-radius: 5px;
+    border: 1px solid #1f2937;
+    color: #8b949e;
+    font-size: 0.9em;
+    font-family: 'Courier New', monospace;
+}
+.hcl-combo-display strong { color: #fbbf24; font-size: 1.15em; }
+
+/* Calculate button */
+.hcl-calc-btn {
+    background: linear-gradient(135deg, #00e5c4 0%, #00a58f 100%);
+    color: #0a0e14;
+    border: none;
+    padding: 16px 30px;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: 900;
+    letter-spacing: 2px;
+    cursor: pointer;
+    width: 100%;
+    text-transform: uppercase;
+    transition: all 0.25s ease;
+    margin-bottom: 20px;
+}
+.hcl-calc-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,229,196,0.4);
+}
+.hcl-calc-btn:active { transform: translateY(0); }
+
+/* Results section */
+.hcl-results { display: none; }
+.hcl-results.visible { display: block; }
+
+.hcl-result-error {
+    background: rgba(239,68,68,0.1);
+    border: 1px solid #ef4444;
+    color: #fca5a5;
+    padding: 14px 18px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-size: 0.92em;
+    line-height: 1.6;
+}
+
+/* Primary result card */
+.hcl-result-primary {
+    background: linear-gradient(135deg, #0d1b2a 0%, #1b263b 100%);
+    border: 1px solid #00e5c4;
+    border-radius: 10px;
+    padding: 22px 25px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+}
+.hcl-result-primary::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0;
+    width: 4px; height: 100%;
+    background: linear-gradient(180deg, #00e5c4 0%, #00a58f 100%);
+}
+.hcl-profit-display {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 20px;
+    align-items: center;
+}
+.hcl-profit-main .label {
+    color: #8b949e;
+    font-size: 0.78em;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+.hcl-profit-main .value {
+    color: #00e5c4;
+    font-size: 2.4em;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.5px;
+    font-family: 'Courier New', monospace;
+}
+.hcl-profit-main .sub {
+    color: #8b949e;
+    font-size: 0.85em;
+    margin-top: 4px;
+    font-style: italic;
+}
+.hcl-profit-meta .label {
+    color: #8b949e;
+    font-size: 0.72em;
+    letter-spacing: 1px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+}
+.hcl-profit-meta .value {
+    color: #ffffff;
+    font-size: 1.3em;
+    font-weight: 800;
+    font-family: 'Courier New', monospace;
+}
+.hcl-profit-meta .roi { color: #fbbf24; }
+
+/* Bet stakes table */
+.hcl-stakes-table-wrap {
+    background: #0d1421;
+    border: 1px solid #1f2937;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+.hcl-stakes-table-wrap h3 {
+    background: #0a0e14;
+    color: #00e5c4;
+    font-size: 0.88em;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin: 0;
+    padding: 14px 20px;
+    border-bottom: 1px solid #1f2937;
+}
+.hcl-stakes-table { width: 100%; border-collapse: collapse; font-size: 0.92em; }
+.hcl-stakes-table thead th {
+    background: #131d2e;
+    color: #8b949e;
+    padding: 10px 15px;
+    text-align: left;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    font-size: 0.78em;
+    text-transform: uppercase;
+    border-bottom: 1px solid #1f2937;
+}
+.hcl-stakes-table thead th:last-child { text-align: right; }
+.hcl-stakes-table tbody td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #1a2332;
+    color: #c9d1d9;
+    font-family: 'Courier New', monospace;
+}
+.hcl-stakes-table tbody tr:last-child td { border-bottom: none; }
+.hcl-stakes-table tbody tr:hover { background: rgba(0,229,196,0.03); }
+.hcl-stakes-table td:last-child {
+    text-align: right;
+    font-weight: 700;
+    color: #ffffff;
+    font-size: 1.05em;
+}
+.hcl-stakes-table .hcl-bet-tag {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 3px;
+    font-size: 0.75em;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-right: 8px;
+    text-transform: uppercase;
+}
+.hcl-tag-pre { background: rgba(0,229,196,0.15); color: #00e5c4; }
+.hcl-tag-post { background: rgba(251,191,36,0.15); color: #fbbf24; }
+
+/* Scenarios */
+.hcl-scenarios-wrap {
+    background: #0d1421;
+    border: 1px solid #1f2937;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.hcl-scenarios-wrap h3 {
+    background: #0a0e14;
+    color: #00e5c4;
+    font-size: 0.88em;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin: 0;
+    padding: 14px 20px;
+    border-bottom: 1px solid #1f2937;
+}
+.hcl-scenario-list { padding: 6px 0; }
+.hcl-scenario {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    align-items: center;
+    padding: 12px 20px;
+    border-bottom: 1px solid #1a2332;
+}
+.hcl-scenario:last-child { border-bottom: none; }
+.hcl-scenario:hover { background: rgba(0,229,196,0.03); }
+.hcl-scenario-title {
+    color: #c9d1d9;
+    font-weight: 600;
+    font-size: 0.93em;
+}
+.hcl-scenario-title .what-wins {
+    display: inline-block;
+    background: rgba(0,229,196,0.12);
+    color: #00e5c4;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 0.82em;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    margin-right: 8px;
+    font-family: 'Courier New', monospace;
+}
+.hcl-scenario-detail {
+    color: #6b7280;
+    font-size: 0.78em;
+    margin-top: 4px;
+    font-family: 'Courier New', monospace;
+}
+.hcl-scenario-profit {
+    font-family: 'Courier New', monospace;
+    font-weight: 800;
+    font-size: 1.05em;
+    color: #00e5c4;
+    text-align: right;
+    min-width: 100px;
+}
+.hcl-scenario-profit.negative { color: #ef4444; }
+
+/* Info note */
+.hcl-note {
+    margin-top: 18px;
+    padding: 14px 18px;
+    background: rgba(0,229,196,0.04);
+    border-left: 3px solid #00e5c4;
+    border-radius: 4px;
+    color: #8b949e;
+    font-size: 0.82em;
+    line-height: 1.7;
+    font-style: italic;
+}
+.hcl-note strong { color: #c9d1d9; font-style: normal; }
+
+/* Currency selector */
+.hcl-currency-select {
+    background: #0d1421;
+    color: #c9d1d9;
+    border: 1px solid #1f2937;
+    border-radius: 5px;
+    padding: 11px 14px;
+    font-size: 1em;
+    font-weight: 700;
+    width: 100%;
+    box-sizing: border-box;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+}
+.hcl-currency-select:focus { outline: none; border-color: #fbbf24; }
+
+/* Mobile */
+@media (max-width: 720px) {
+    .hcl-root { margin: 15px auto; }
+    .hcl-header { padding: 22px 18px 18px 18px; }
+    .hcl-header h1 { font-size: 1.5em; letter-spacing: 1.5px; }
+    .hcl-body { padding: 18px; }
+    .hcl-workflow { margin: 15px 18px 0 18px; padding: 12px 14px; }
+    .hcl-workflow-steps { grid-template-columns: 1fr 1fr; }
+    .hcl-match-card, .hcl-stake-card { padding: 16px 18px; }
+    .hcl-outcome {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    .hcl-outcome .hcl-radio-wrap { order: 2; }
+    .hcl-outcome .hcl-odds-input { order: 3; }
+    .hcl-stake-row { grid-template-columns: 1fr; }
+    .hcl-profit-display { grid-template-columns: 1fr; gap: 12px; }
+    .hcl-profit-main .value { font-size: 1.9em; }
+    .hcl-stakes-table { font-size: 0.82em; }
+    .hcl-stakes-table thead th,
+    .hcl-stakes-table tbody td { padding: 9px 10px; }
+    .hcl-scenario { grid-template-columns: 1fr; gap: 6px; }
+    .hcl-scenario-profit { text-align: left; }
+}
+</style>
+
+<div class="hcl-root">
+
+    <!-- HEADER -->
+    <div class="hcl-header">
+        <div class="hcl-badge">◆ PRO TRADER TOOL ◆</div>
+        <h1>HEDGE <span>CHAIN</span> LAB</h1>
+        <div class="hcl-subtitle">Sequential combo hedging · Equal profit across all outcomes</div>
+    </div>
+
+    <!-- WORKFLOW INFO -->
+    <div class="hcl-workflow">
+        <strong>⏱ EXECUTION TIMELINE:</strong>
+        How the stakes are placed in real time.
+        <div class="hcl-workflow-steps">
+            <div class="hcl-step"><b>1</b>Place combo + Match 1 hedges NOW</div>
+            <div class="hcl-step"><b>2</b>Match 1 plays</div>
+            <div class="hcl-step"><b>3</b>If combo-leg wins → place Match 2 hedge</div>
+            <div class="hcl-step"><b>4</b>Equal profit either way</div>
+        </div>
+    </div>
+
+    <div class="hcl-body">
+
+        <!-- MATCH 1 -->
+        <div class="hcl-match-card">
+            <h2><span class="hcl-match-num">1</span>MATCH 1 — First Leg</h2>
+            <div class="hcl-match-hint">Select the outcome that's in your combo (radio button). Enter all odds as they appear at the bookmakers.</div>
+
+            <div class="hcl-market-toggle">
+                <button class="hcl-toggle-btn active" onclick="hclSetMarket(1, 3, event)">3-WAY MARKET (1 · X · 2)</button>
+                <button class="hcl-toggle-btn" onclick="hclSetMarket(1, 2, event)">2-WAY MARKET</button>
+            </div>
+
+            <div class="hcl-outcomes" id="hcl-m1-outcomes">
+                <!-- populated by JS -->
+            </div>
+        </div>
+
+        <!-- MATCH 2 -->
+        <div class="hcl-match-card">
+            <h2><span class="hcl-match-num">2</span>MATCH 2 — Second Leg</h2>
+            <div class="hcl-match-hint">The hedge for Match 2 will be placed LATER — only if your combo-leg wins in Match 1.</div>
+
+            <div class="hcl-market-toggle">
+                <button class="hcl-toggle-btn active" onclick="hclSetMarket(2, 2, event)">2-WAY MARKET</button>
+                <button class="hcl-toggle-btn" onclick="hclSetMarket(2, 3, event)">3-WAY MARKET (1 · X · 2)</button>
+            </div>
+
+            <div class="hcl-outcomes" id="hcl-m2-outcomes">
+                <!-- populated by JS -->
+            </div>
+        </div>
+
+        <!-- COMBO STAKE -->
+        <div class="hcl-stake-card">
+            <h2>⚡ COMBO BET</h2>
+            <div class="hcl-stake-row">
+                <div class="hcl-stake-field">
+                    <label>Combo Stake</label>
+                    <input type="number" id="hcl-combo-stake" class="hcl-stake-input" value="10" step="0.01" min="0">
+                </div>
+                <div class="hcl-stake-field">
+                    <label>Currency</label>
+                    <select id="hcl-currency" class="hcl-currency-select">
+                        <option value="€">EUR (€)</option>
+                        <option value="$">USD ($)</option>
+                        <option value="£">GBP (£)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="hcl-combo-display" id="hcl-combo-preview" style="margin-top:12px;">
+                Auto combo odds: <strong id="hcl-combo-odds-val">—</strong> · Max return: <strong id="hcl-max-return">—</strong>
+            </div>
+        </div>
+
+        <!-- CALC BUTTON -->
+        <button class="hcl-calc-btn" onclick="hclCalculate()">▶ CALCULATE HEDGES</button>
+
+        <!-- RESULTS -->
+        <div class="hcl-results" id="hcl-results"></div>
+
+        <!-- INFO NOTE -->
+        <div class="hcl-note">
+            <strong>How it works:</strong> The calculator works backward from the total combo return. It computes the Match 2 hedge first (future stake, placed only if your combo-leg wins Match 1), then subtracts it from the total to find the "target equity" — the value to protect through Match 1 hedges. All Match 1 hedges are then sized so every outcome delivers the same locked profit.
+        </div>
+
+    </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   HEDGE CHAIN LAB — JavaScript
+   ═══════════════════════════════════════════════════════════════ */
+
+var hclState = {
+    m1: { marketType: 3, comboIndex: 0 },
+    m2: { marketType: 2, comboIndex: 0 }
+};
+
+function hclInit() {
+    hclRenderOutcomes(1);
+    hclRenderOutcomes(2);
+    hclBindStakeListeners();
+    hclUpdateComboPreview();
+}
+
+function hclRenderOutcomes(matchNum) {
+    var container = document.getElementById('hcl-m' + matchNum + '-outcomes');
+    var state = hclState['m' + matchNum];
+    var labels3way = ['Home (1)', 'Draw (X)', 'Away (2)'];
+    var labels2way = ['Outcome 1', 'Outcome 2'];
+    var labels = state.marketType === 3 ? labels3way : labels2way;
+    var defaultOdds = state.marketType === 3 ? [2.00, 3.30, 5.50] : [1.95, 2.50];
+    if (matchNum === 2 && state.marketType === 2) defaultOdds = [1.95, 2.50];
+
+    container.innerHTML = '';
+    for (var i = 0; i < state.marketType; i++) {
+        var isCombo = (i === state.comboIndex);
+        var row = document.createElement('div');
+        row.className = 'hcl-outcome' + (isCombo ? ' selected' : '');
+        row.id = 'hcl-m' + matchNum + '-row-' + i;
+
+        row.innerHTML =
+            '<div class="hcl-outcome-label">' + labels[i] + '</div>' +
+            '<label class="hcl-radio-wrap">' +
+                '<input type="radio" name="hcl-m' + matchNum + '-combo" value="' + i + '" ' + (isCombo ? 'checked' : '') + ' onchange="hclSetComboIndex(' + matchNum + ', ' + i + ')">' +
+                'In my combo' +
+            '</label>' +
+            '<input type="number" id="hcl-m' + matchNum + '-odds-' + i + '" class="hcl-odds-input' + (isCombo ? ' combo-selected' : '') + '" step="0.01" min="1.01" value="' + defaultOdds[i] + '" oninput="hclUpdateComboPreview()">';
+
+        container.appendChild(row);
+    }
+}
+
+function hclSetMarket(matchNum, marketType, evt) {
+    hclState['m' + matchNum].marketType = marketType;
+    // Reset combo index if out of range
+    if (hclState['m' + matchNum].comboIndex >= marketType) {
+        hclState['m' + matchNum].comboIndex = 0;
+    }
+    // Update toggle buttons
+    var card = evt.currentTarget.parentNode;
+    var buttons = card.querySelectorAll('.hcl-toggle-btn');
+    for (var i = 0; i < buttons.length; i++) buttons[i].classList.remove('active');
+    evt.currentTarget.classList.add('active');
+    hclRenderOutcomes(matchNum);
+    hclUpdateComboPreview();
+}
+
+function hclSetComboIndex(matchNum, index) {
+    hclState['m' + matchNum].comboIndex = index;
+    // Update selected highlight
+    var state = hclState['m' + matchNum];
+    for (var i = 0; i < state.marketType; i++) {
+        var row = document.getElementById('hcl-m' + matchNum + '-row-' + i);
+        var oddsInput = document.getElementById('hcl-m' + matchNum + '-odds-' + i);
+        if (i === index) {
+            row.classList.add('selected');
+            oddsInput.classList.add('combo-selected');
+        } else {
+            row.classList.remove('selected');
+            oddsInput.classList.remove('combo-selected');
+        }
+    }
+    hclUpdateComboPreview();
+}
+
+function hclBindStakeListeners() {
+    document.getElementById('hcl-combo-stake').addEventListener('input', hclUpdateComboPreview);
+}
+
+function hclUpdateComboPreview() {
+    var m1Odds = parseFloat(document.getElementById('hcl-m1-odds-' + hclState.m1.comboIndex).value) || 0;
+    var m2Odds = parseFloat(document.getElementById('hcl-m2-odds-' + hclState.m2.comboIndex).value) || 0;
+    var stake = parseFloat(document.getElementById('hcl-combo-stake').value) || 0;
+    var currency = document.getElementById('hcl-currency').value;
+
+    var comboOdds = m1Odds * m2Odds;
+    var maxReturn = stake * comboOdds;
+
+    document.getElementById('hcl-combo-odds-val').textContent = comboOdds > 0 ? comboOdds.toFixed(2) : '—';
+    document.getElementById('hcl-max-return').textContent = maxReturn > 0 ? (currency + maxReturn.toFixed(2)) : '—';
+}
+
+function hclCalculate() {
+    var resultsDiv = document.getElementById('hcl-results');
+    resultsDiv.classList.add('visible');
+    resultsDiv.innerHTML = '';
+
+    // Gather inputs
+    var currency = document.getElementById('hcl-currency').value;
+    var stake = parseFloat(document.getElementById('hcl-combo-stake').value);
+
+    var m1 = hclState.m1;
+    var m2 = hclState.m2;
+
+    var m1OddsList = [];
+    var m1Labels3way = ['Home (1)', 'Draw (X)', 'Away (2)'];
+    var m1Labels2way = ['Outcome 1', 'Outcome 2'];
+    var m1Labels = m1.marketType === 3 ? m1Labels3way : m1Labels2way;
+    for (var i = 0; i < m1.marketType; i++) {
+        m1OddsList.push(parseFloat(document.getElementById('hcl-m1-odds-' + i).value));
+    }
+
+    var m2OddsList = [];
+    var m2Labels3way = ['Home (1)', 'Draw (X)', 'Away (2)'];
+    var m2Labels2way = ['Outcome 1', 'Outcome 2'];
+    var m2Labels = m2.marketType === 3 ? m2Labels3way : m2Labels2way;
+    for (var j = 0; j < m2.marketType; j++) {
+        m2OddsList.push(parseFloat(document.getElementById('hcl-m2-odds-' + j).value));
+    }
+
+    // Validation
+    if (!(stake > 0)) {
+        resultsDiv.innerHTML = '<div class="hcl-result-error">⚠ Please enter a valid combo stake (greater than 0).</div>';
+        return;
+    }
+    for (var a = 0; a < m1OddsList.length; a++) {
+        if (!(m1OddsList[a] >= 1.01)) {
+            resultsDiv.innerHTML = '<div class="hcl-result-error">⚠ All Match 1 odds must be at least 1.01.</div>';
+            return;
+        }
+    }
+    for (var b = 0; b < m2OddsList.length; b++) {
+        if (!(m2OddsList[b] >= 1.01)) {
+            resultsDiv.innerHTML = '<div class="hcl-result-error">⚠ All Match 2 odds must be at least 1.01.</div>';
+            return;
+        }
+    }
+
+    // Core math
+    var comboOddsM1 = m1OddsList[m1.comboIndex];
+    var comboOddsM2 = m2OddsList[m2.comboIndex];
+    var comboOdds = comboOddsM1 * comboOddsM2;
+    var totalReturn = stake * comboOdds;
+
+    // Match 2 hedge — pick the BEST hedge odds (use the non-combo outcome with highest odds as the implied hedge)
+    // For 2-way: the other side. For 3-way: we hedge the other two outcomes so the combo pays out equal everywhere.
+    // To keep it simple and useful, we use the "single-leg" approach: one hedge bet covering the remaining market.
+    // For 2-way M2 this is just the other outcome. For 3-way M2, we split across the two non-combo outcomes.
+
+    var m2NonCombo = [];
+    for (var k = 0; k < m2OddsList.length; k++) {
+        if (k !== m2.comboIndex) m2NonCombo.push({ idx: k, odds: m2OddsList[k], label: m2Labels[k] });
+    }
+    var m1NonCombo = [];
+    for (var m = 0; m < m1OddsList.length; m++) {
+        if (m !== m1.comboIndex) m1NonCombo.push({ idx: m, odds: m1OddsList[m], label: m1Labels[m] });
+    }
+
+    // Equity target for Match 1 hedges = totalReturn - (stakes needed to cover Match 2 so each non-combo outcome returns totalReturn)
+    // For a single non-combo outcome in M2 (2-way): hedge stake = totalReturn / odds, and it returns totalReturn.
+    // For two non-combo outcomes in M2 (3-way): we size each so its return = totalReturn each; total hedge cost = totalReturn/odds_a + totalReturn/odds_b.
+    // BUT: only ONE of those M2 non-combo outcomes can win. So total cost = sum of stakes placed; return = totalReturn from whichever hits.
+    // Net equity retained if combo-leg M1 wins = totalReturn - (sum of M2 hedge stakes).
+
+    var m2HedgeStakes = [];
+    var m2HedgeCostTotal = 0;
+    for (var n = 0; n < m2NonCombo.length; n++) {
+        var hStake = totalReturn / m2NonCombo[n].odds;
+        m2HedgeStakes.push({ label: m2NonCombo[n].label, odds: m2NonCombo[n].odds, stake: hStake });
+        m2HedgeCostTotal += hStake;
+    }
+
+    // Target equity that Match 1 hedges must deliver (same as what the combo-leg win delivers after paying M2 hedges)
+    var targetEquity = totalReturn - m2HedgeCostTotal;
+
+    if (targetEquity <= 0) {
+        resultsDiv.innerHTML = '<div class="hcl-result-error">⚠ Target equity is zero or negative — Match 2 hedge odds are too low. This combo structure cannot be balanced.</div>';
+        return;
+    }
+
+    // Match 1 hedges — each non-combo outcome gets a stake such that its return = targetEquity
+    var m1HedgeStakes = [];
+    var m1HedgeCostTotal = 0;
+    for (var p = 0; p < m1NonCombo.length; p++) {
+        var h1Stake = targetEquity / m1NonCombo[p].odds;
+        m1HedgeStakes.push({ label: m1NonCombo[p].label, odds: m1NonCombo[p].odds, stake: h1Stake });
+        m1HedgeCostTotal += h1Stake;
+    }
+
+    // Profit calculation — guaranteed equal profit across all outcomes
+    // Sum of all "pre-match" costs: combo stake + all M1 hedges
+    var preMatchCost = stake + m1HedgeCostTotal;
+    // If any M1 non-combo outcome wins: return = targetEquity; profit = targetEquity - preMatchCost
+    var profitIfM1NonComboWins = targetEquity - preMatchCost;
+    // If combo-leg wins M1, we then place M2 hedges. Total cost = preMatchCost + m2HedgeCostTotal.
+    // If combo wins fully: return = totalReturn; profit = totalReturn - (preMatchCost + m2HedgeCostTotal) = targetEquity - preMatchCost (same)
+    // If M2 hedge wins (i.e., M2 non-combo outcome wins after M1 combo-leg wins): return = totalReturn; profit = totalReturn - (preMatchCost + m2HedgeCostTotal) = same
+
+    var guaranteedProfit = profitIfM1NonComboWins;
+    var totalInvestmentIfChainContinues = preMatchCost + m2HedgeCostTotal;
+    var roi = (guaranteedProfit / totalInvestmentIfChainContinues) * 100;
+
+    // ─── BUILD RESULTS UI ───
+    var html = '';
+
+    // Primary result
+    var profitColor = guaranteedProfit > 0 ? '' : 'style="color:#ef4444;"';
+    html += '<div class="hcl-result-primary">';
+    html += '<div class="hcl-profit-display">';
+    html += '<div class="hcl-profit-main">';
+    html += '<div class="label">Guaranteed Profit</div>';
+    html += '<div class="value" ' + profitColor + '>' + currency + guaranteedProfit.toFixed(2) + '</div>';
+    html += '<div class="sub">Locked across all possible outcomes</div>';
+    html += '</div>';
+    html += '<div class="hcl-profit-meta">';
+    html += '<div class="label">Max Capital</div>';
+    html += '<div class="value">' + currency + totalInvestmentIfChainContinues.toFixed(2) + '</div>';
+    html += '</div>';
+    html += '<div class="hcl-profit-meta">';
+    html += '<div class="label">ROI</div>';
+    html += '<div class="value roi">' + roi.toFixed(2) + '%</div>';
+    html += '</div>';
+    html += '</div>';
+    html += '</div>';
+
+    // Stakes table
+    html += '<div class="hcl-stakes-table-wrap">';
+    html += '<h3>⚡ Stakes to Place</h3>';
+    html += '<table class="hcl-stakes-table">';
+    html += '<thead><tr><th>Bet</th><th>Selection</th><th>Odds</th><th>Stake</th></tr></thead>';
+    html += '<tbody>';
+    // Combo
+    html += '<tr><td><span class="hcl-bet-tag hcl-tag-pre">PRE-MATCH</span>Combo</td>';
+    html += '<td>' + m1Labels[m1.comboIndex] + ' (M1) + ' + m2Labels[m2.comboIndex] + ' (M2)</td>';
+    html += '<td>' + comboOdds.toFixed(2) + '</td>';
+    html += '<td>' + currency + stake.toFixed(2) + '</td></tr>';
+    // M1 hedges
+    for (var q = 0; q < m1HedgeStakes.length; q++) {
+        html += '<tr><td><span class="hcl-bet-tag hcl-tag-pre">PRE-MATCH</span>Match 1 Hedge</td>';
+        html += '<td>' + m1HedgeStakes[q].label + '</td>';
+        html += '<td>' + m1HedgeStakes[q].odds.toFixed(2) + '</td>';
+        html += '<td>' + currency + m1HedgeStakes[q].stake.toFixed(2) + '</td></tr>';
+    }
+    // M2 hedges (post-match 1)
+    for (var r = 0; r < m2HedgeStakes.length; r++) {
+        html += '<tr><td><span class="hcl-bet-tag hcl-tag-post">AFTER M1</span>Match 2 Hedge</td>';
+        html += '<td>' + m2HedgeStakes[r].label + '</td>';
+        html += '<td>' + m2HedgeStakes[r].odds.toFixed(2) + '</td>';
+        html += '<td>' + currency + m2HedgeStakes[r].stake.toFixed(2) + '</td></tr>';
+    }
+    html += '</tbody></table>';
+    html += '</div>';
+
+    // Scenarios
+    html += '<div class="hcl-scenarios-wrap">';
+    html += '<h3>🎯 All Possible Scenarios</h3>';
+    html += '<div class="hcl-scenario-list">';
+
+    // M1 non-combo outcomes (chain breaks at M1)
+    for (var s = 0; s < m1HedgeStakes.length; s++) {
+        var scStake = m1HedgeStakes[s];
+        var scInvest = preMatchCost;
+        var scReturn = scStake.stake * scStake.odds;
+        var scProfit = scReturn - scInvest;
+        html += '<div class="hcl-scenario">';
+        html += '<div>';
+        html += '<div class="hcl-scenario-title"><span class="what-wins">' + scStake.label.toUpperCase() + '</span>Match 1 non-combo outcome wins — chain stops</div>';
+        html += '<div class="hcl-scenario-detail">Invested: ' + currency + scInvest.toFixed(2) + ' · Return: ' + currency + scReturn.toFixed(2) + '</div>';
+        html += '</div>';
+        html += '<div class="hcl-scenario-profit ' + (scProfit < 0 ? 'negative' : '') + '">' + (scProfit >= 0 ? '+' : '') + currency + scProfit.toFixed(2) + '</div>';
+        html += '</div>';
+    }
+
+    // M1 combo wins, then M2 non-combo hedge wins (chain broke at M2)
+    for (var t = 0; t < m2HedgeStakes.length; t++) {
+        var scHedge = m2HedgeStakes[t];
+        var scInvest2 = preMatchCost + m2HedgeCostTotal;
+        var scReturn2 = scHedge.stake * scHedge.odds;
+        var scProfit2 = scReturn2 - scInvest2;
+        html += '<div class="hcl-scenario">';
+        html += '<div>';
+        html += '<div class="hcl-scenario-title"><span class="what-wins">M1 COMBO → M2: ' + scHedge.label.toUpperCase() + '</span>Combo-leg wins M1, then M2 hedge wins</div>';
+        html += '<div class="hcl-scenario-detail">Invested: ' + currency + scInvest2.toFixed(2) + ' · Return: ' + currency + scReturn2.toFixed(2) + '</div>';
+        html += '</div>';
+        html += '<div class="hcl-scenario-profit ' + (scProfit2 < 0 ? 'negative' : '') + '">' + (scProfit2 >= 0 ? '+' : '') + currency + scProfit2.toFixed(2) + '</div>';
+        html += '</div>';
+    }
+
+    // Combo fully wins
+    var scComboInvest = preMatchCost + m2HedgeCostTotal;
+    var scComboReturn = totalReturn;
+    var scComboProfit = scComboReturn - scComboInvest;
+    html += '<div class="hcl-scenario">';
+    html += '<div>';
+    html += '<div class="hcl-scenario-title"><span class="what-wins">FULL COMBO WINS</span>Both combo legs hit — maximum payout</div>';
+    html += '<div class="hcl-scenario-detail">Invested: ' + currency + scComboInvest.toFixed(2) + ' · Return: ' + currency + scComboReturn.toFixed(2) + '</div>';
+    html += '</div>';
+    html += '<div class="hcl-scenario-profit ' + (scComboProfit < 0 ? 'negative' : '') + '">' + (scComboProfit >= 0 ? '+' : '') + currency + scComboProfit.toFixed(2) + '</div>';
+    html += '</div>';
+
+    html += '</div>';
+    html += '</div>';
+
+    resultsDiv.innerHTML = html;
+    // Scroll to results
+    setTimeout(function() {
+        resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+}
+
+// Initialize on DOM ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', hclInit);
+} else {
+    hclInit();
+}
+
+// Update combo preview when currency changes
+document.addEventListener('DOMContentLoaded', function() {
+    var curSel = document.getElementById('hcl-currency');
+    if (curSel) curSel.addEventListener('change', hclUpdateComboPreview);
+});
+</script>
+
+
+</body>
+</html>

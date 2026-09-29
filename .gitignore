@@ -1,0 +1,43 @@
+node_modules/
+_site/
+.DS_Store
+*.log
+.env
+.cache/
+
+# ── Internal operations — never publish ────────────────────────────────
+# Deploy, server provisioning, agents, AI guidance and internal docs.
+# These stay local; the public repo is the site source + documentation only.
+agents/
+scripts/
+deploy.sh
+setup-*.sh
+CLAUDE.md
+OPERATIONS_CHEATSHEET.txt
+AGENTS_BRIEFING.md
+IMAGES_BRIEFING.md
+KNOWLEDGE_BASE_PLAN.md
+CHECKPOINT.md
+PROJECT_ARCHIVE.md
+EN_REVAMP_CHECKPOINT.md
+_archive-bg/
+en-source/
+full_backups/
+.claude/
+
+# Internal docs / archives at repo root (never publish)
+Архиви на сайта/
+ВВВ+ стратегия
+Одит на Журналистта
+claw_all_*.txt
+
+# ── Scratch / temp files in root (never commit) ────────────────────────
+123
+reports
+github repo
+WorkFlow before summer
+АПИ антропик 2
+test-image.png
+Снимка на екрана_*.png
+*.pdf
+tool-*.html

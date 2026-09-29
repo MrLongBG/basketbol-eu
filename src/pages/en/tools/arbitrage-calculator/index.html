@@ -1,0 +1,448 @@
+---
+permalink: /tools/arbitrage-calculator/index.html
+eleventyExcludeFromCollections: true
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Arbitrage Calculator — Basketbol.EU</title>
+  <meta name="description" content="Free arbitrage calculator by basketbol.eu — compute the exact stakes for a surebet on 2 or 3 outcomes.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; }
+    .tool-topbar {
+      background: #0a0e14;
+      color: #c9d1d9;
+      padding: 10px 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 1px solid #1f2937;
+      position: sticky; top: 0; z-index: 999;
+    }
+    .tool-topbar .tb-logo {
+      font-family: 'Oswald', Impact, sans-serif;
+      font-size: 16px;
+      letter-spacing: 3px;
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .tool-topbar .tb-logo span { color: #00e5c4; }
+    .tool-topbar .tb-sep { color: #5a6270; }
+    .tool-topbar a.tb-back {
+      color: #00e5c4;
+      text-decoration: none;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+    .tool-topbar a.tb-back:hover { color: #ffffff; }
+    .tool-topbar .tb-spacer { flex: 1; }
+    .tool-topbar .tb-meta {
+      color: #8b949e;
+      font-family: 'Courier New', monospace;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .ac-root {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0a0e14;
+      color: #c9d1d9;
+      max-width: 720px;
+      margin: 30px auto;
+      padding: 0;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+      border: 1px solid #1f2937;
+    }
+
+    .ac-header {
+      background: linear-gradient(135deg, #0d1b2a 0%, #1b263b 100%);
+      padding: 28px 30px 24px 30px;
+      text-align: center;
+      border-bottom: 1px solid #1f2937;
+      position: relative;
+    }
+    .ac-header::before {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent 0%, #00e5c4 50%, transparent 100%);
+    }
+    .ac-badge {
+      display: inline-block;
+      background: rgba(0,229,196,0.1);
+      color: #00e5c4;
+      padding: 4px 14px;
+      border-radius: 4px;
+      font-size: 11px;
+      letter-spacing: 2px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      border: 1px solid rgba(0,229,196,0.25);
+      text-transform: uppercase;
+    }
+    .ac-header h1 {
+      color: #ffffff;
+      font-size: 1.7em;
+      font-weight: 800;
+      letter-spacing: 1px;
+      margin: 0;
+    }
+    .ac-header h1 span { color: #00e5c4; }
+
+    .ac-body { padding: 25px 30px 30px 30px; }
+
+    .ac-field { margin-bottom: 18px; }
+    .ac-field label {
+      display: block;
+      font-size: 0.82em;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #8b949e;
+      margin-bottom: 7px;
+    }
+    .ac-input, .ac-select {
+      width: 100%;
+      box-sizing: border-box;
+      background: #0d1421;
+      border: 1px solid #1f2937;
+      border-radius: 8px;
+      color: #c9d1d9;
+      padding: 11px 14px;
+      font-size: 1em;
+      transition: border-color 0.2s ease;
+    }
+    .ac-input:focus, .ac-select:focus {
+      outline: none;
+      border-color: #00e5c4;
+    }
+    .ac-input::placeholder { color: #5a6270; }
+
+    .ac-odds-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    @media (min-width: 480px) {
+      .ac-odds-row { grid-template-columns: repeat(3, 1fr); }
+      .ac-odds-row.two-way { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .ac-controls {
+      display: flex;
+      gap: 12px;
+      margin-top: 26px;
+    }
+    .ac-btn {
+      flex: 1;
+      border: none;
+      border-radius: 8px;
+      padding: 13px 16px;
+      font-size: 0.95em;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .ac-btn-calc {
+      background: #00e5c4;
+      color: #0a0e14;
+    }
+    .ac-btn-calc:hover { box-shadow: 0 2px 12px rgba(0,229,196,0.35); }
+    .ac-btn-reset {
+      background: transparent;
+      color: #c9d1d9;
+      border: 2px solid #1f2937;
+    }
+    .ac-btn-reset:hover { border-color: #00e5c4; color: #ffffff; }
+
+    .ac-result { display: none; margin-top: 24px; }
+    .ac-result.active { display: block; }
+
+    .ac-msg {
+      background: rgba(245,158,11,0.06);
+      border-left: 3px solid #f59e0b;
+      padding: 14px 18px;
+      border-radius: 6px;
+      font-size: 0.92em;
+      color: #e8d5ad;
+    }
+
+    .ac-status {
+      padding: 14px 18px;
+      border-radius: 8px;
+      font-size: 0.95em;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 18px;
+    }
+    .ac-status.ok {
+      background: rgba(0,229,196,0.08);
+      border: 1px solid rgba(0,229,196,0.3);
+      color: #00e5c4;
+    }
+    .ac-status.no {
+      background: rgba(239,68,68,0.08);
+      border: 1px solid rgba(239,68,68,0.3);
+      color: #f87171;
+    }
+
+    .ac-summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .ac-sum-card {
+      background: #0d1421;
+      border: 1px solid #1f2937;
+      border-radius: 8px;
+      padding: 14px 12px;
+      text-align: center;
+    }
+    .ac-sum-label {
+      display: block;
+      font-size: 0.72em;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #8b949e;
+      margin-bottom: 6px;
+    }
+    .ac-sum-value {
+      font-size: 1.35em;
+      font-weight: 800;
+      color: #ffffff;
+    }
+    .ac-sum-value.positive { color: #00e5c4; }
+    .ac-sum-value.negative { color: #f87171; }
+
+    .ac-table-wrap { overflow-x: auto; }
+    .ac-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #0d1421;
+      border: 1px solid #1f2937;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .ac-table th, .ac-table td {
+      padding: 11px 8px;
+      text-align: center;
+      border-bottom: 1px solid #1f2937;
+      font-size: 0.88em;
+    }
+    .ac-table thead th {
+      background: #161f2e;
+      color: #00e5c4;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      font-size: 0.78em;
+    }
+    .ac-table tbody th {
+      background: #111a27;
+      color: #8b949e;
+      font-weight: 600;
+      text-align: left;
+      white-space: nowrap;
+    }
+    .ac-table tbody tr:last-child th,
+    .ac-table tbody tr:last-child td { border-bottom: none; }
+    .ac-table td strong { color: #ffffff; font-weight: 700; }
+  </style>
+</head>
+<body>
+
+<div class="tool-topbar">
+  <a href="/" class="tb-logo">BASKETBOL<span>.EU</span></a>
+  <span class="tb-sep">/</span>
+  <a href="/tools/" class="tb-back">← Analytical Tools</a>
+  <div class="tb-spacer"></div>
+  <div class="tb-meta">Arbitrage Calculator</div>
+</div>
+
+<div class="ac-root">
+  <div class="ac-header">
+    <span class="ac-badge">SURBET · ARBITRAGE</span>
+    <h1>Free <span>arbitrage</span> calculator</h1>
+  </div>
+
+  <div class="ac-body">
+    <div class="ac-field">
+      <label for="ac-stake">Stake</label>
+      <input class="ac-input" type="number" id="ac-stake" step="0.01" min="0" placeholder="e.g. 100">
+    </div>
+
+    <div class="ac-field">
+      <label for="ac-outcomes">Number of outcomes</label>
+      <select class="ac-select" id="ac-outcomes">
+        <option value="two-way" selected>2 (1–2)</option>
+        <option value="three-way">3 (1–X–2)</option>
+      </select>
+    </div>
+
+    <div class="ac-field">
+      <label>Odds</label>
+      <div class="ac-odds-row two-way" id="ac-odds-row">
+        <div>
+          <label for="ac-home">Home</label>
+          <input class="ac-input" type="number" id="ac-home" step="0.01" min="1.01" placeholder="1.50">
+        </div>
+        <div id="ac-draw-wrap" style="display:none;">
+          <label for="ac-draw">Draw</label>
+          <input class="ac-input" type="number" id="ac-draw" step="0.01" min="1.01" placeholder="2.20">
+        </div>
+        <div>
+          <label for="ac-away">Away</label>
+          <input class="ac-input" type="number" id="ac-away" step="0.01" min="1.01" placeholder="3.50">
+        </div>
+      </div>
+    </div>
+
+    <div class="ac-controls">
+      <button class="ac-btn ac-btn-calc" id="ac-calc">Calculate</button>
+      <button class="ac-btn ac-btn-reset" id="ac-reset">Reset</button>
+    </div>
+
+    <div class="ac-result" id="ac-result"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var stakeEl = document.getElementById('ac-stake');
+  var outcomesEl = document.getElementById('ac-outcomes');
+  var homeEl = document.getElementById('ac-home');
+  var drawEl = document.getElementById('ac-draw');
+  var awayEl = document.getElementById('ac-away');
+  var drawWrap = document.getElementById('ac-draw-wrap');
+  var oddsRow = document.getElementById('ac-odds-row');
+  var btnCalc = document.getElementById('ac-calc');
+  var btnReset = document.getElementById('ac-reset');
+  var resultEl = document.getElementById('ac-result');
+
+  function fmt(v, d) {
+    d = (typeof d === 'undefined') ? 2 : d;
+    return Number(v).toFixed(d);
+  }
+
+  function showMessage(msg) {
+    resultEl.innerHTML = '<div class="ac-msg">' + msg + '</div>';
+    resultEl.classList.add('active');
+  }
+
+  function clearResult() {
+    resultEl.innerHTML = '';
+    resultEl.classList.remove('active');
+  }
+
+  function parseVal(el) {
+    var v = el.value.trim();
+    if (v === '') return null;
+    var n = Number(v);
+    return Number.isFinite(n) ? n : null;
+  }
+
+  function updateUI() {
+    var threeWay = outcomesEl.value === 'three-way';
+    drawWrap.style.display = threeWay ? 'block' : 'none';
+    oddsRow.className = 'ac-odds-row' + (threeWay ? '' : ' two-way');
+  }
+
+  updateUI();
+  outcomesEl.addEventListener('change', updateUI);
+
+  btnCalc.addEventListener('click', function () {
+    clearResult();
+
+    var mode = outcomesEl.value;
+    var stake = parseVal(stakeEl);
+    var oH = parseVal(homeEl);
+    var oD = parseVal(drawEl);
+    var oA = parseVal(awayEl);
+
+    if (stake === null) { showMessage('Please enter a stake!'); return; }
+    if (stake <= 0) { showMessage('The stake must be greater than 0.'); return; }
+
+    if (oH === null) { showMessage('Please enter the Home odds!'); return; }
+    if (oH <= 1) { showMessage('The Home odds must be greater than 1.00.'); return; }
+
+    if (oA === null) { showMessage('Please enter the Away odds!'); return; }
+    if (oA <= 1) { showMessage('The Away odds must be greater than 1.00.'); return; }
+
+    if (mode === 'three-way') {
+      if (oD === null) { showMessage('Please enter the Draw odds!'); return; }
+      if (oD <= 1) { showMessage('The Draw odds must be greater than 1.00.'); return; }
+    }
+
+    var outcomes = [
+      { label: 'Home', odds: oH },
+      { label: 'Draw', odds: oD, threeWayOnly: true },
+      { label: 'Away', odds: oA }
+    ].filter(function (o) { return !o.threeWayOnly || mode === 'three-way'; });
+
+    var invSum = outcomes.reduce(function (s, o) { return s + (1 / o.odds); }, 0);
+    var guaranteedReturn = stake / invSum;
+    var profit = guaranteedReturn - stake;
+    var profitPct = (guaranteedReturn / stake - 1) * 100;
+
+    outcomes.forEach(function (o) {
+      o.stake = stake * ((1 / o.odds) / invSum);
+      o.ret = o.stake * o.odds;
+    });
+
+    var headerCells = outcomes.map(function (o) { return '<th>' + o.label + '</th>'; }).join('');
+    var oddsRowHtml = outcomes.map(function (o) { return '<td><strong>' + fmt(o.odds) + '</strong></td>'; }).join('');
+    var stakeRowHtml = outcomes.map(function (o) { return '<td><strong>' + fmt(o.stake) + '</strong></td>'; }).join('');
+    var returnRowHtml = outcomes.map(function (o) { return '<td><strong>' + fmt(o.ret) + '</strong></td>'; }).join('');
+    var profitRowHtml = outcomes.map(function () { return '<td><strong>' + fmt(profit) + '</strong></td>'; }).join('');
+
+    var isArb = invSum < 1;
+    var statusHtml = isArb
+      ? '<div class="ac-status ok">✅ Arbitrage opportunity available</div>'
+      : '<div class="ac-status no">❌ No arbitrage opportunity</div>';
+
+    var tableHtml = '<div class="ac-table-wrap"><table class="ac-table"><thead><tr><th>&nbsp;</th>' +
+      headerCells +
+      '</tr></thead><tbody>' +
+      '<tr><th>Odds</th>' + oddsRowHtml + '</tr>' +
+      '<tr><th>Stake</th>' + stakeRowHtml + '</tr>' +
+      '<tr><th>Return</th>' + returnRowHtml + '</tr>' +
+      '<tr><th>Profit</th>' + profitRowHtml + '</tr>' +
+      '</tbody></table></div>';
+
+    var summaryHtml = '<div class="ac-summary">' +
+      '<div class="ac-sum-card"><span class="ac-sum-label">Arbitrage</span><span class="ac-sum-value ' + (profitPct >= 0 ? 'positive' : 'negative') + '">' + fmt(profitPct) + '%</span></div>' +
+      '<div class="ac-sum-card"><span class="ac-sum-label">Return</span><span class="ac-sum-value">' + fmt(guaranteedReturn) + '</span></div>' +
+      '<div class="ac-sum-card"><span class="ac-sum-label">Guaranteed profit</span><span class="ac-sum-value ' + (profit >= 0 ? 'positive' : 'negative') + '">' + fmt(profit) + '</span></div>' +
+      '</div>';
+
+    resultEl.innerHTML = statusHtml + summaryHtml + tableHtml;
+    resultEl.classList.add('active');
+  });
+
+  btnReset.addEventListener('click', function () {
+    clearResult();
+    [stakeEl, homeEl, drawEl, awayEl].forEach(function (el) { el.value = ''; });
+    outcomesEl.value = 'two-way';
+    updateUI();
+  });
+})();
+</script>
+
+</body>
+</html>

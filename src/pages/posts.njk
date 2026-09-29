@@ -1,0 +1,64 @@
+---
+layout: base.njk
+title: All Articles
+description: Archive of all articles on basketbol.eu
+pagination:
+  data: collections.posts
+  size: 11
+  reverse: true
+  alias: posts
+permalink: /posts/{% if pagination.pageNumber > 0 %}page/{{ pagination.pageNumber + 1 }}/{% endif %}index.html
+---
+<div class="content">
+  <h1 class="page-title">All Articles</h1>
+  <p class="lead">Page {{ pagination.pageNumber + 1 }} of {{ pagination.pages.length }} · {{ pagination.items.length }} articles</p>
+
+  {% if posts.length > 0 %}
+  <div class="post-list">
+    {% for post in posts %}
+    <a href="{{ post.url }}" class="post-card">
+      <div class="post-thumb">
+        {% if post.data.heroImage %}
+          <img src="{{ post.data.heroImage }}"
+               alt="{{ post.data.heroImageAlt or post.data.title }}"
+               loading="lazy">
+        {% else %}
+          <span class="post-thumb-icon">🏀</span>
+        {% endif %}
+      </div>
+      <div class="post-body">
+        <div class="post-meta">
+          {% if post.data.category %}<span class="post-tag post-tag-primary">{{ post.data.category }}</span>{% endif %}
+          <span>{{ post.date | dateEN }}</span>
+        </div>
+        <h3 class="post-card-title">{{ post.data.title }}</h3>
+        <p class="post-card-desc">{{ post.data.description }}</p>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+
+  {% if pagination.pages.length > 1 %}
+  <nav class="pagination">
+    {% if pagination.href.previous %}
+      <a href="{{ pagination.href.previous }}" class="pagination-arrow">← Previous</a>
+    {% endif %}
+    <div class="pagination-pages">
+      {% for pageUrl in pagination.hrefs %}
+        {% set pageNum = loop.index0 %}
+        <a href="{{ pageUrl }}"
+           class="pagination-num{% if pageNum === pagination.pageNumber %} active{% endif %}">
+          {{ loop.index }}
+        </a>
+      {% endfor %}
+    </div>
+    {% if pagination.href.next %}
+      <a href="{{ pagination.href.next }}" class="pagination-arrow">Next →</a>
+    {% endif %}
+  </nav>
+  {% endif %}
+
+  {% else %}
+  <p style="color: var(--text-muted); font-size: 14px;">No articles published yet.</p>
+  {% endif %}
+</div>

@@ -1,0 +1,1266 @@
+---
+permalink: /tools/analysis-suite/index.html
+eleventyExcludeFromCollections: true
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analysis Suite — Basketbol.EU</title>
+  <meta name="description" content="Value Betting, Kelly Criterion, ELO Rating, Poisson — analytical suite by basketbol.eu">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; }
+    .tool-topbar {
+      background: #0a0e14;
+      color: #c9d1d9;
+      padding: 10px 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 1px solid #1f2937;
+      position: sticky; top: 0; z-index: 999;
+    }
+    .tool-topbar .tb-logo {
+      font-family: 'Oswald', Impact, sans-serif;
+      font-size: 16px;
+      letter-spacing: 3px;
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .tool-topbar .tb-logo span { color: #00e5c4; }
+    .tool-topbar .tb-sep { color: #5a6270; }
+    .tool-topbar a.tb-back {
+      color: #00e5c4;
+      text-decoration: none;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+    .tool-topbar a.tb-back:hover { color: #ffffff; }
+    .tool-topbar .tb-spacer { flex: 1; }
+    .tool-topbar .tb-meta {
+      color: #8b949e;
+      font-family: 'Courier New', monospace;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+<div class="tool-topbar">
+  <a href="/" class="tb-logo">BASKETBOL<span>.EU</span></a>
+  <span class="tb-sep">/</span>
+  <a href="/tools/" class="tb-back">← Analytical Tools</a>
+  <div class="tb-spacer"></div>
+  <div class="tb-meta">Analysis Suite</div>
+</div>
+
+<style>
+/* ═══ HIDE BLOGGER PAGE TITLE ON ANALYSIS SUITE PAGE ═══ */
+
+</style>
+<!-- ════════════════════════════════════════════════════════════════════
+     BASKETBOL.EU ANALYSIS SUITE
+     All analysis tools consolidated in one page.
+     Paste this entire block into a Blogger HTML page.
+     ════════════════════════════════════════════════════════════════════ -->
+
+<style>
+/* ═══ GLOBAL CONTAINER (both tools share these) ═══ */
+.bk-suite {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #0d1b1a 0%, #143530 100%);
+    padding: 25px;
+    border-radius: 15px;
+    color: #e8f4f2;
+    max-width: 1100px;
+    margin: 30px auto;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+}
+.bk-suite h1 {
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 8px;
+    font-size: 2.1em;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+    font-weight: 700;
+}
+.bk-suite .bk-subtitle {
+    color: #3DB4A0;
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 1.05em;
+    letter-spacing: 0.5px;
+}
+
+/* ═══ MASTER TOOL SELECTOR ═══ */
+.bk-master-nav {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    background: rgba(255,255,255,0.04);
+    padding: 8px;
+    border-radius: 12px;
+    border: 1px solid rgba(61,180,160,0.2);
+}
+.bk-master-btn {
+    flex: 1;
+    padding: 16px 20px;
+    background: transparent;
+    color: #a8c5c0;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1.05em;
+    transition: all 0.3s;
+}
+.bk-master-btn:hover {
+    background: rgba(61,180,160,0.1);
+    color: #ffffff;
+}
+.bk-master-btn.active {
+    background: #3DB4A0;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(61,180,160,0.3);
+}
+.bk-tool-section {
+    display: none;
+}
+.bk-tool-section.active {
+    display: block;
+}
+
+/* ═══ CARDS (white on dark) ═══ */
+.bc-card, .bb-card {
+    background: #ffffff;
+    color: #333;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+.bc-card h2, .bb-card h2 {
+    color: #3DB4A0;
+    margin-bottom: 20px;
+    border-bottom: 3px solid #3DB4A0;
+    padding-bottom: 10px;
+    font-size: 1.5em;
+}
+.bc-card h3, .bb-card h3 {
+    color: #2a8775;
+    margin: 20px 0 10px 0;
+    font-size: 1.2em;
+}
+
+/* ═══ CURRENCY TOGGLE (Bonus Calc) ═══ */
+.bc-currency-toggle {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+.bc-currency-btn {
+    padding: 12px 35px;
+    background: #e8f4f2;
+    border: 2px solid #3DB4A0;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1.1em;
+    color: #2a8775;
+    transition: all 0.3s;
+}
+.bc-currency-btn:hover {
+    background: #c7e5de;
+}
+.bc-currency-btn.active {
+    background: #3DB4A0;
+    color: white;
+}
+
+/* ═══ GRID & INPUTS ═══ */
+.bc-grid, .bb-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+.bc-input-group, .bb-input-group {
+    margin-bottom: 15px;
+}
+.bc-input-group label, .bb-input-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #333;
+    font-size: 0.95em;
+}
+.bc-input-group input, .bc-input-group select,
+.bb-input-group input, .bb-input-group select {
+    width: 100%;
+    padding: 11px;
+    border: 2px solid #d8e8e5;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+    background: #ffffff;
+    color: #333;
+}
+.bc-input-group input:focus, .bc-input-group select:focus,
+.bb-input-group input:focus, .bb-input-group select:focus {
+    outline: none;
+    border-color: #3DB4A0;
+}
+
+/* ═══ BUTTONS ═══ */
+.bc-button, .bb-button {
+    background: linear-gradient(135deg, #3DB4A0 0%, #2a8775 100%);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: 100%;
+    margin-top: 10px;
+}
+.bc-button:hover, .bb-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(61,180,160,0.4);
+}
+
+/* ═══ RESULTS ═══ */
+.bc-results, .bb-results {
+    background: #f5faf9;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+}
+.bc-result-item, .bb-result-item {
+    padding: 18px;
+    background: white;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    border-left: 5px solid #3DB4A0;
+}
+.bc-result-item h3, .bb-result-item h3 {
+    color: #3DB4A0;
+    margin: 0 0 10px 0;
+    font-size: 1.15em;
+}
+.bc-result-value, .bb-result-value {
+    font-size: 1.8em;
+    font-weight: bold;
+    margin: 8px 0;
+}
+.bb-result-value { font-size: 1.6em; color: #333; }
+
+.bc-profit-positive, .bb-positive { color: #10b981; }
+.bc-profit-negative, .bb-negative { color: #ef4444; }
+.bc-neutral, .bb-neutral { color: #f59e0b; }
+
+.bc-explanation, .bb-explanation {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 8px;
+    line-height: 1.6;
+}
+
+/* ═══ INFO BOXES ═══ */
+.bc-info-box, .bb-info-box {
+    background: #e8f4f2;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border-left: 4px solid #3DB4A0;
+}
+.bc-info-box h3, .bb-info-box h3 {
+    color: #2a8775;
+    margin-bottom: 10px;
+}
+.bc-info-box ul, .bb-info-box ul {
+    margin-left: 20px;
+    line-height: 1.8;
+}
+.bc-info-box ul li, .bb-info-box ul li {
+    margin-bottom: 8px;
+}
+
+.bc-warning {
+    background: #fef3c7;
+    border-left: 4px solid #f59e0b;
+    padding: 12px;
+    border-radius: 5px;
+    margin: 10px 0;
+    font-size: 0.95em;
+    color: #78350f;
+}
+
+.bb-formula {
+    background: #0d1b1a;
+    color: #3DB4A0;
+    padding: 10px;
+    border-radius: 5px;
+    font-family: 'Courier New', monospace;
+    margin: 10px 0;
+    overflow-x: auto;
+    font-size: 0.9em;
+}
+
+/* ═══ INNER TABS ═══ */
+.bc-tabs, .bb-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+.bc-tab, .bb-tab {
+    padding: 12px 20px;
+    background: #e8f4f2;
+    color: #2a8775;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+    flex: 1;
+    min-width: 120px;
+}
+.bc-tab:hover, .bb-tab:hover {
+    background: #c7e5de;
+}
+.bc-tab.active, .bb-tab.active {
+    background: #3DB4A0;
+    color: white;
+}
+.bc-tab-content, .bb-tab-content {
+    display: none;
+}
+.bc-tab-content.active, .bb-tab-content.active {
+    display: block;
+}
+
+.bc-exchange-rate {
+    background: #e8f4f2;
+    padding: 10px;
+    border-radius: 6px;
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 0.9em;
+    color: #2a8775;
+    border: 1px solid #b8dcd3;
+}
+
+/* ═══ MOBILE ═══ */
+@media (max-width: 768px) {
+    .bk-suite { padding: 15px; margin: 15px auto; }
+    .bk-suite h1 { font-size: 1.6em; }
+    .bk-master-nav { flex-direction: column; }
+    .bc-card, .bb-card { padding: 15px; }
+    .bc-grid, .bb-grid { grid-template-columns: 1fr; }
+    .bc-currency-btn { padding: 10px 20px; font-size: 1em; }
+    .bc-result-value { font-size: 1.4em; }
+    .bc-tabs, .bb-tabs { flex-direction: column; }
+    .bc-tab, .bb-tab { min-width: 100%; }
+}
+</style>
+
+<div class="bk-suite">
+    <h1>🏀 Basketbol.EU Analysis Suite</h1>
+    <div class="bk-subtitle">Where 40 years of court instinct meets machine intelligence</div>
+
+    <!-- ═══ MASTER NAVIGATION ═══ -->
+    <div class="bk-master-nav">
+        <button class="bk-master-btn active" onclick="bkSwitchTool('betting', event)">
+            🏀 Betting Analyzer
+        </button>
+        <button class="bk-master-btn" onclick="bkSwitchTool('bonus', event)">
+            💰 Bonus Calculator
+        </button>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════
+         TOOL 1: BETTING ANALYZER
+         ════════════════════════════════════════════════════════ -->
+    <div class="bk-tool-section active" id="bk-betting">
+
+        <div class="bb-card">
+            <div class="bb-tabs">
+                <button class="bb-tab active" onclick="bbSwitchTab('value', event)">Value Betting</button>
+                <button class="bb-tab" onclick="bbSwitchTab('kelly', event)">Kelly Criterion</button>
+                <button class="bb-tab" onclick="bbSwitchTab('elo', event)">ELO Rating</button>
+                <button class="bb-tab" onclick="bbSwitchTab('poisson', event)">Poisson Model</button>
+            </div>
+
+            <!-- Value Betting -->
+            <div id="bb-value" class="bb-tab-content active">
+                <h2>Value Betting Calculator</h2>
+                <div class="bb-info-box">
+                    <h3>How it works:</h3>
+                    <p>Value = (Probability × Odds) - 1. If Value &gt; 0, the bet has positive expected value (EV+).</p>
+                    <div class="bb-formula">Expected Value = (Probability × Odds) - 1</div>
+                </div>
+
+                <div class="bb-grid">
+                    <div class="bb-input-group">
+                        <label>Your probability estimate (%):</label>
+                        <input type="number" id="bb-trueProbability" value="55" step="0.1" min="0" max="100">
+                    </div>
+                    <div class="bb-input-group">
+                        <label>Bookmaker odds:</label>
+                        <input type="number" id="bb-bookmakerOdds" value="2.00" step="0.01">
+                    </div>
+                </div>
+
+                <div class="bb-input-group">
+                    <label>Bankroll size:</label>
+                    <input type="number" id="bb-bankroll" value="1000" step="10">
+                </div>
+
+                <button class="bb-button" onclick="bbCalculateValue()">Calculate Value</button>
+
+                <div id="bb-valueResults" class="bb-results" style="display:none;"></div>
+            </div>
+
+            <!-- Kelly -->
+            <div id="bb-kelly" class="bb-tab-content">
+                <h2>Kelly Criterion - Optimal Stake</h2>
+                <div class="bb-info-box">
+                    <h3>How it works:</h3>
+                    <p>Kelly formula calculates the optimal percentage of your bankroll to bet, maximizing long-term growth.</p>
+                    <div class="bb-formula">Kelly % = (p × q - (1-p)) / q<br>where: p = probability, q = odds - 1</div>
+                </div>
+
+                <div class="bb-grid">
+                    <div class="bb-input-group">
+                        <label>Your win probability (%):</label>
+                        <input type="number" id="bb-kellyProb" value="60" step="0.1" min="0" max="100">
+                    </div>
+                    <div class="bb-input-group">
+                        <label>Odds:</label>
+                        <input type="number" id="bb-kellyOdds" value="2.10" step="0.01">
+                    </div>
+                </div>
+
+                <div class="bb-grid">
+                    <div class="bb-input-group">
+                        <label>Bankroll:</label>
+                        <input type="number" id="bb-kellyBankroll" value="1000" step="10">
+                    </div>
+                    <div class="bb-input-group">
+                        <label>Kelly fraction (safety):</label>
+                        <select id="bb-kellyFraction">
+                            <option value="1">Full Kelly (100%)</option>
+                            <option value="0.5" selected>Half Kelly (50%)</option>
+                            <option value="0.25">Quarter Kelly (25%)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="bb-button" onclick="bbCalculateKelly()">Calculate Kelly Stake</button>
+
+                <div id="bb-kellyResults" class="bb-results" style="display:none;"></div>
+            </div>
+
+            <!-- ELO -->
+            <div id="bb-elo" class="bb-tab-content">
+                <h2>ELO Rating System</h2>
+                <div class="bb-info-box">
+                    <h3>How it works:</h3>
+                    <p>ELO system calculates win probability based on team ratings. Higher ELO = greater chance of winning.</p>
+                    <div class="bb-formula">P(A wins) = 1 / (1 + 10^((ELO_B - ELO_A) / 400))</div>
+                </div>
+
+                <div class="bb-grid">
+                    <div class="bb-input-group">
+                        <label>Team A ELO Rating:</label>
+                        <input type="number" id="bb-eloA" value="1600" step="1">
+                    </div>
+                    <div class="bb-input-group">
+                        <label>Team B ELO Rating:</label>
+                        <input type="number" id="bb-eloB" value="1550" step="1">
+                    </div>
+                </div>
+
+                <div class="bb-grid">
+                    <div class="bb-input-group">
+                        <label>Home Court Advantage (+ELO):</label>
+                        <input type="number" id="bb-homeAdvantage" value="100" step="10">
+                    </div>
+                    <div class="bb-input-group">
+                        <label>Team A Odds:</label>
+                        <input type="number" id="bb-oddsA" value="1.85" step="0.01">
+                    </div>
+                </div>
+
+                <button class="bb-button" onclick="bbCalculateELO()">Calculate ELO Prediction</button>
+
+                <div id="bb-eloResults" class="bb-results" style="display:none;"></div>
+            </div>
+
+            <!-- Poisson -->
+            <div id="bb-poisson" class="bb-tab-content">
+                <h2>Poisson Model for Points</h2>
+                <div class="bb-info-box">
+                    <h3>How it works:</h3>
+                    <p>Poisson distribution models the probability of a certain number of points. Based on team average scores.</p>
+                </div>
+
+                <div class="bb-grid">
+                    <div class="bb-input-group">
+                        <label>Team A Average Points:</label>
+                        <input type="number" id="bb-avgPointsA" value="110" step="0.1">
+                    </div>
+                    <div class="bb-input-group">
+                        <label>Team B Average Points:</label>
+                        <input type="number" id="bb-avgPointsB" value="105" step="0.1">
+                    </div>
+                </div>
+
+                <div class="bb-grid">
+                    <div class="bb-input-group">
+                        <label>Over/Under Line:</label>
+                        <input type="number" id="bb-ouLine" value="215" step="0.5">
+                    </div>
+                    <div class="bb-input-group">
+                        <label>Handicap (for Team A):</label>
+                        <input type="number" id="bb-handicap" value="-5.5" step="0.5">
+                    </div>
+                </div>
+
+                <button class="bb-button" onclick="bbCalculatePoisson()">Calculate Probabilities</button>
+
+                <div id="bb-poissonResults" class="bb-results" style="display:none;"></div>
+            </div>
+        </div>
+
+        <!-- Education: Betting -->
+        <div class="bb-card">
+            <h2>📚 Key Information</h2>
+            <div class="bb-info-box">
+                <h3>Core Principles:</h3>
+                <ul>
+                    <li><strong>Variance:</strong> Basketball has lower variance than soccer due to more scoring</li>
+                    <li><strong>Home Court:</strong> Usually worth ~3-4 points or +100 ELO</li>
+                    <li><strong>Back-to-back games:</strong> Teams lose ~2-3% efficiency</li>
+                    <li><strong>Rest days:</strong> Teams with more rest have an advantage</li>
+                    <li><strong>Motivation:</strong> Playoff chase, rivalry games have impact</li>
+                </ul>
+            </div>
+            <div class="bb-info-box">
+                <h3>Important Statistics for Analysis:</h3>
+                <ul>
+                    <li><strong>Pace:</strong> Possessions per game - faster pace = more points</li>
+                    <li><strong>ORtg/DRtg:</strong> Offensive/Defensive Rating - points per 100 possessions</li>
+                    <li><strong>eFG%:</strong> Effective Field Goal % - accounts for three-pointer value</li>
+                    <li><strong>TOV%:</strong> Turnover percentage - lost possessions</li>
+                    <li><strong>FT Rate:</strong> Free throw rate - how often team gets to the line</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════
+         TOOL 2: BONUS VALUE CALCULATOR
+         ════════════════════════════════════════════════════════ -->
+    <div class="bk-tool-section" id="bk-bonus">
+
+        <div class="bc-exchange-rate" id="bc-exchange-display">
+            Loading exchange rate...
+        </div>
+
+        <div class="bc-card">
+            <h2>Calculator</h2>
+
+            <div class="bc-currency-toggle">
+                <button class="bc-currency-btn active" onclick="bcSetCurrency('EUR', event)">EUR (€)</button>
+                <button class="bc-currency-btn" onclick="bcSetCurrency('USD', event)">USD ($)</button>
+            </div>
+
+            <div class="bc-tabs">
+                <button class="bc-tab active" onclick="bcSwitchTab('basic', event)">Basic Calculator</button>
+                <button class="bc-tab" onclick="bcSwitchTab('hedge', event)">Hedge Strategy</button>
+                <button class="bc-tab" onclick="bcSwitchTab('breakeven', event)">Break-Even Optimizer</button>
+            </div>
+
+            <!-- Basic -->
+            <div class="bc-tab-content active" id="bc-basic">
+                <div class="bc-grid">
+                    <div class="bc-input-group">
+                        <label>Odds (Decimal):</label>
+                        <input id="bc-odds" type="number" value="2.00" />
+                    </div>
+                    <div class="bc-input-group">
+                        <label>Bonus Type:</label>
+                        <select id="bc-bonusType">
+                            <option value="freebet">Free Bet</option>
+                            <option value="cash">Cash Bonus</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="bc-grid">
+                    <div class="bc-input-group">
+                        <label>Stake Amount (<span id="bc-currency-symbol">€</span>):</label>
+                        <input id="bc-stake" type="number" value="50" />
+                    </div>
+                    <div class="bc-input-group">
+                        <label>Max Bet Limit (<span id="bc-currency-symbol-2">€</span>):</label>
+                        <input id="bc-maxBet" type="number" value="100" />
+                    </div>
+                </div>
+
+                <button class="bc-button" onclick="bcCalculateBasic()">Calculate Value</button>
+
+                <div class="bc-results" id="bc-basicResults" style="display: none;"></div>
+            </div>
+
+            <!-- Hedge -->
+            <div class="bc-tab-content" id="bc-hedge">
+                <h3>Exchange Rate Settings</h3>
+                <div style="background: #e8f4f2; border-radius: 8px; border: 1px solid #b8dcd3; margin-bottom: 20px; padding: 15px;">
+                    <div style="align-items: center; display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px;">
+                        <button class="bc-currency-btn" id="bc-rate-auto" onclick="bcToggleRateMode('auto')" style="flex: 0 0 auto; padding: 8px 20px;">Auto Rate</button>
+                        <button class="bc-currency-btn" id="bc-rate-manual" onclick="bcToggleRateMode('manual')" style="flex: 0 0 auto; padding: 8px 20px;">Manual Rate</button>
+                        <div style="flex: 1 1 0%; min-width: 200px;">
+                            <input disabled id="bc-manual-rate" style="padding: 8px; width: 100%;" type="number" value="1.19" />
+                        </div>
+                    </div>
+                    <div style="color: #2a8775; font-size: 0.9em;">
+                        <span id="bc-rate-display">Current Rate: 1 EUR = 1.19 USD (Manual)</span>
+                    </div>
+                </div>
+
+                <h3>Bet 1 (Home Win)</h3>
+                <div class="bc-grid">
+                    <div class="bc-input-group">
+                        <label>Odds:</label>
+                        <input id="bc-bet1-odds" type="number" value="3.00" />
+                    </div>
+                    <div class="bc-input-group">
+                        <label>Type:</label>
+                        <select id="bc-bet1-type">
+                            <option value="cash">Cash Bonus</option>
+                            <option value="freebet">Free Bet</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="bc-grid">
+                    <div class="bc-input-group">
+                        <label>Amount:</label>
+                        <input id="bc-bet1-amount" type="number" value="10" />
+                    </div>
+                    <div class="bc-input-group">
+                        <label>Currency:</label>
+                        <select id="bc-bet1-currency">
+                            <option value="EUR">EUR (€)</option>
+                            <option value="USD">USD ($)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h3>Bet X (Draw)</h3>
+                <div class="bc-grid">
+                    <div class="bc-input-group">
+                        <label>Odds:</label>
+                        <input id="bc-betx-odds" type="number" value="3.00" />
+                    </div>
+                    <div class="bc-input-group">
+                        <label>Type:</label>
+                        <select id="bc-betx-type">
+                            <option value="cash">Cash Bonus</option>
+                            <option value="freebet">Free Bet</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="bc-grid">
+                    <div class="bc-input-group">
+                        <label>Amount:</label>
+                        <input id="bc-betx-amount" type="number" value="12" />
+                    </div>
+                    <div class="bc-input-group">
+                        <label>Currency:</label>
+                        <select id="bc-betx-currency">
+                            <option value="EUR">EUR (€)</option>
+                            <option selected value="USD">USD ($)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h3>Bet 2 (Away Win)</h3>
+                <div class="bc-grid">
+                    <div class="bc-input-group">
+                        <label>Odds:</label>
+                        <input id="bc-bet2-odds" type="number" value="2.00" />
+                    </div>
+                    <div class="bc-input-group">
+                        <label>Type:</label>
+                        <select id="bc-bet2-type">
+                            <option value="cash">Cash Bonus</option>
+                            <option selected value="freebet">Free Bet</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="bc-grid">
+                    <div class="bc-input-group">
+                        <label>Amount:</label>
+                        <input id="bc-bet2-amount" type="number" value="20" />
+                    </div>
+                    <div class="bc-input-group">
+                        <label>Currency:</label>
+                        <select id="bc-bet2-currency">
+                            <option value="EUR">EUR (€)</option>
+                            <option value="USD">USD ($)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="bc-button" onclick="bcCalculateHedge()">Calculate 3-Way Hedge</button>
+
+                <div class="bc-results" id="bc-hedgeResults" style="display: none;"></div>
+            </div>
+
+            <!-- Break-Even -->
+            <div class="bc-tab-content" id="bc-breakeven">
+                <div class="bc-info-box">
+                    <h3>💡 How Break-Even Optimizer Works</h3>
+                    <p>Enter your main bet (e.g., a Free Bet bonus) and the current market odds. The calculator will show you the <strong>exact stakes needed</strong> on the other outcomes to achieve €0.00 profit/loss across all scenarios - a perfect break-even hedge.</p>
+                    <p><strong>Why use this?</strong> It helps you quickly decide if hedging is worth it by showing the total cash investment required for a risk-free outcome.</p>
+                </div>
+
+                <h3>Your Main Bet</h3>
+                <div class="bc-grid">
+                    <div class="bc-input-group">
+                        <label>Main Bet Odds:</label>
+                        <input id="bc-be-main-odds" type="number" value="2.50" />
+                    </div>
+                    <div class="bc-input-group">
+                        <label>Main Bet Type:</label>
+                        <select id="bc-be-main-type">
+                            <option selected value="freebet">Free Bet</option>
+                            <option value="cash">Cash Bonus</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="bc-grid">
+                    <div class="bc-input-group">
+                        <label>Main Bet Amount:</label>
+                        <input id="bc-be-main-amount" type="number" value="50" />
+                    </div>
+                    <div class="bc-input-group">
+                        <label>Main Bet Currency:</label>
+                        <select id="bc-be-main-currency">
+                            <option selected value="EUR">EUR (€)</option>
+                            <option value="USD">USD ($)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h3>Market Odds (Other Outcomes)</h3>
+                <div class="bc-grid">
+                    <div class="bc-input-group">
+                        <label>Outcome 2 Odds:</label>
+                        <input id="bc-be-odds2" type="number" value="3.00" />
+                    </div>
+                    <div class="bc-input-group">
+                        <label>Outcome 3 Odds (optional for 3-way):</label>
+                        <input id="bc-be-odds3" type="number" value="0" />
+                        <small style="color: #666;">Leave at 0 for 2-way betting</small>
+                    </div>
+                </div>
+
+                <div class="bc-input-group">
+                    <label>Output Currency:</label>
+                    <select id="bc-be-output-currency">
+                        <option selected value="EUR">EUR (€)</option>
+                        <option value="USD">USD ($)</option>
+                    </select>
+                </div>
+
+                <button class="bc-button" onclick="bcCalculateBreakEven()">Calculate Break-Even Stakes</button>
+
+                <div class="bc-results" id="bc-breakevenResults" style="display: none;"></div>
+            </div>
+        </div>
+
+        <!-- Education: Bonus -->
+        <div class="bc-card">
+            <h2>📚 Bonus Hunting Strategy Guide</h2>
+            <div class="bc-info-box">
+                <h3>Understanding Bonus Types</h3>
+                <ul>
+                    <li><strong>Free Bet:</strong> Stake is NOT returned. Profit = (Stake × Odds) - Stake. Typical value: 70-80% of face value.</li>
+                    <li><strong>Cash Bonus:</strong> Full stake is returned. Profit = (Stake × Odds). Better value but often has wagering requirements.</li>
+                </ul>
+            </div>
+            <div class="bc-info-box">
+                <h3>Optimal Odds for Free Bet Conversion</h3>
+                <ul>
+                    <li><strong>2.00 - 3.00 odds:</strong> Best balance between value retention and win probability</li>
+                    <li><strong>Below 2.00:</strong> Lower value conversion (~60-70%)</li>
+                    <li><strong>Above 4.00:</strong> Higher theoretical value but lower win rate</li>
+                    <li><strong>Sweet spot:</strong> 2.50 odds = ~80% value retention for free bets</li>
+                </ul>
+            </div>
+            <div class="bc-info-box">
+                <h3>When to Use Hedge Strategy</h3>
+                <ul>
+                    <li><strong>Large free bets (€50+):</strong> Lock in guaranteed profit by betting both outcomes</li>
+                    <li><strong>High-value promotions:</strong> When bonus value justifies the effort</li>
+                    <li><strong>Risk-free approach:</strong> Sacrifice some value for certainty</li>
+                    <li><strong>Expected return:</strong> Typically 70-85% of free bet amount as guaranteed profit</li>
+                </ul>
+            </div>
+            <div class="bc-info-box">
+                <h3>Risk Management Tips</h3>
+                <ul>
+                    <li><strong>Max Bet Limits:</strong> Always check bookmaker restrictions before placing bets</li>
+                    <li><strong>Market Liquidity:</strong> Ensure sufficient liquidity on both sides for hedge bets</li>
+                    <li><strong>Odds Movement:</strong> Place hedge bets quickly to avoid odds changes</li>
+                    <li><strong>Account Limits:</strong> Avoid patterns that trigger gubbing (account restrictions)</li>
+                    <li><strong>Bankroll Management:</strong> Never risk more than 5% of bankroll on a single bonus</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   MASTER TOOL SWITCHER
+   ═══════════════════════════════════════════════════════════════ */
+function bkSwitchTool(toolName, evt) {
+    document.querySelectorAll('.bk-tool-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.bk-master-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('bk-' + toolName).classList.add('active');
+    if (evt && evt.currentTarget) evt.currentTarget.classList.add('active');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BONUS CALCULATOR (bc-prefix)
+   ═══════════════════════════════════════════════════════════════ */
+var bcCurrentCurrency = 'EUR';
+var bcExchangeRate = 1.19;
+var bcRateLastUpdated = null;
+var bcRateMode = 'manual';
+var bcCurrencySymbols = { 'EUR': '€', 'USD': '$' };
+
+window.addEventListener('DOMContentLoaded', function() {
+    bcToggleRateMode('manual');
+    bcFetchExchangeRate();
+});
+
+function bcToggleRateMode(mode) {
+    bcRateMode = mode;
+    var autoBtn = document.getElementById('bc-rate-auto');
+    var manualBtn = document.getElementById('bc-rate-manual');
+    var manualInput = document.getElementById('bc-manual-rate');
+    var rateDisplay = document.getElementById('bc-rate-display');
+
+    if (mode === 'auto') {
+        autoBtn.classList.add('active');
+        manualBtn.classList.remove('active');
+        manualInput.disabled = true;
+        bcFetchExchangeRate();
+    } else {
+        manualBtn.classList.add('active');
+        autoBtn.classList.remove('active');
+        manualInput.disabled = false;
+        bcExchangeRate = parseFloat(manualInput.value) || 1.19;
+        rateDisplay.textContent = 'Current Rate: 1 EUR = ' + bcExchangeRate.toFixed(4) + ' USD (Manual)';
+    }
+
+    manualInput.addEventListener('input', function() {
+        if (bcRateMode === 'manual') {
+            bcExchangeRate = parseFloat(this.value) || 1.19;
+            rateDisplay.textContent = 'Current Rate: 1 EUR = ' + bcExchangeRate.toFixed(4) + ' USD (Manual)';
+        }
+    });
+}
+
+async function bcFetchExchangeRate() {
+    if (bcRateMode === 'manual') return;
+    var displayDiv = document.getElementById('bc-exchange-display');
+    var rateDisplay = document.getElementById('bc-rate-display');
+
+    try {
+        var cached = bcGetCachedRate();
+        if (cached) {
+            bcExchangeRate = cached.rate;
+            bcRateLastUpdated = cached.timestamp;
+            var updateTime = new Date(cached.timestamp).toLocaleString('en-GB', {timeZone: 'Europe/Sofia'});
+            displayDiv.innerHTML = 'Exchange Rate: 1 EUR = ' + bcExchangeRate.toFixed(4) + ' USD | Updated: ' + updateTime + ' (Bulgaria Time)';
+            if (rateDisplay) rateDisplay.textContent = 'Current Rate: 1 EUR = ' + bcExchangeRate.toFixed(4) + ' USD (Auto - Cached)';
+            return;
+        }
+        var response = await fetch('https://api.exchangerate-api.com/v4/latest/EUR');
+        var data = await response.json();
+        if (data && data.rates && data.rates.USD) {
+            bcExchangeRate = data.rates.USD;
+            bcRateLastUpdated = Date.now();
+            bcCacheRate(bcExchangeRate, bcRateLastUpdated);
+            var updateTime2 = new Date().toLocaleString('en-GB', {timeZone: 'Europe/Sofia'});
+            displayDiv.innerHTML = 'Exchange Rate: 1 EUR = ' + bcExchangeRate.toFixed(4) + ' USD | Updated: ' + updateTime2 + ' (Bulgaria Time)';
+            if (rateDisplay) rateDisplay.textContent = 'Current Rate: 1 EUR = ' + bcExchangeRate.toFixed(4) + ' USD (Auto - Live)';
+        } else { throw new Error('Invalid response'); }
+    } catch (error) {
+        bcExchangeRate = 1.19;
+        displayDiv.innerHTML = '⚠️ Using default rate: 1 EUR = 1.19 USD | <a href="#" onclick="bcFetchExchangeRate(); return false;">Retry</a>';
+        if (rateDisplay) rateDisplay.textContent = 'Current Rate: 1 EUR = ' + bcExchangeRate.toFixed(4) + ' USD (Auto - Fallback)';
+    }
+}
+
+function bcCacheRate(rate, timestamp) {
+    try { localStorage.setItem('bc_exchange_rate', JSON.stringify({ rate: rate, timestamp: timestamp })); } catch (e) {}
+}
+function bcGetCachedRate() {
+    try {
+        var cached = localStorage.getItem('bc_exchange_rate');
+        if (!cached) return null;
+        var data = JSON.parse(cached);
+        var now = new Date();
+        var cachedDate = new Date(data.timestamp);
+        var today7AM = new Date();
+        today7AM.setHours(7, 0, 0, 0);
+        if (cachedDate >= today7AM && cachedDate.toDateString() === now.toDateString()) return data;
+        return null;
+    } catch (e) { return null; }
+}
+
+function bcSetCurrency(currency, evt) {
+    bcCurrentCurrency = currency;
+    document.querySelectorAll('#bk-bonus .bc-currency-toggle .bc-currency-btn').forEach(function(btn){ btn.classList.remove('active'); });
+    if (evt && evt.currentTarget) evt.currentTarget.classList.add('active');
+    var symbol = bcCurrencySymbols[currency];
+    var s1 = document.getElementById('bc-currency-symbol');
+    var s2 = document.getElementById('bc-currency-symbol-2');
+    if (s1) s1.textContent = symbol;
+    if (s2) s2.textContent = symbol;
+}
+
+function bcSwitchTab(tabName, evt) {
+    document.querySelectorAll('#bk-bonus .bc-tab-content').forEach(function(c){ c.classList.remove('active'); });
+    document.querySelectorAll('#bk-bonus .bc-tabs .bc-tab').forEach(function(t){ t.classList.remove('active'); });
+    document.getElementById('bc-' + tabName).classList.add('active');
+    if (evt && evt.currentTarget) evt.currentTarget.classList.add('active');
+}
+
+function bcCalculateBasic() {
+    var odds = parseFloat(document.getElementById('bc-odds').value);
+    var bonusType = document.getElementById('bc-bonusType').value;
+    var stake = parseFloat(document.getElementById('bc-stake').value);
+    var maxBet = parseFloat(document.getElementById('bc-maxBet').value);
+    if (!odds || !stake || odds < 1.01) { alert('Please enter valid values!'); return; }
+    var resultsDiv = document.getElementById('bc-basicResults');
+    var symbol = bcCurrencySymbols[bcCurrentCurrency];
+    var warningHTML = '';
+    if (stake > maxBet) {
+        warningHTML = '<div class="bc-warning">⚠️ Warning: Your stake (' + symbol + stake.toFixed(2) + ') exceeds the maximum bet limit (' + symbol + maxBet.toFixed(2) + '). You can only bet ' + symbol + maxBet.toFixed(2) + '.</div>';
+    }
+    var netProfit, realValue, roi;
+    if (bonusType === 'freebet') {
+        var totalReturn = stake * odds;
+        netProfit = totalReturn - stake;
+        realValue = netProfit;
+        roi = (netProfit / stake) * 100;
+    } else {
+        var totalReturn2 = stake * odds;
+        netProfit = totalReturn2 - stake;
+        realValue = totalReturn2;
+        roi = (netProfit / stake) * 100;
+    }
+    var profitClass = netProfit > 0 ? 'bc-profit-positive' : 'bc-profit-negative';
+    var profitSymbol = netProfit > 0 ? '🟢' : '🔴';
+    var valueRetention = '';
+    if (bonusType === 'freebet') {
+        var retention = (netProfit / stake) * 100;
+        valueRetention = '<div class="bc-result-item"><h3>Value Retention</h3><div class="bc-result-value bc-neutral">' + retention.toFixed(2) + '%</div><div class="bc-explanation">Percentage of free bet value retained as profit<br>' + (retention >= 75 ? '✓ Good conversion rate' : retention >= 60 ? '⚠ Acceptable conversion' : '❌ Poor conversion - consider higher odds') + '</div></div>';
+    }
+    resultsDiv.style.display = 'block';
+    resultsDiv.innerHTML = warningHTML +
+        '<div class="bc-result-item"><h3>Net Profit ' + profitSymbol + '</h3><div class="bc-result-value ' + profitClass + '">' + symbol + netProfit.toFixed(2) + '</div><div class="bc-explanation">' + (bonusType === 'freebet' ? 'Profit after stake deduction (Free Bet)' : 'Profit with stake returned (Cash Bonus)') + '</div></div>' +
+        '<div class="bc-result-item"><h3>Real Value</h3><div class="bc-result-value">' + symbol + realValue.toFixed(2) + '</div><div class="bc-explanation">' + (bonusType === 'freebet' ? 'True value of your ' + symbol + stake.toFixed(2) + ' free bet' : 'Total return including your stake') + '</div></div>' +
+        valueRetention +
+        '<div class="bc-result-item"><h3>ROI</h3><div class="bc-result-value ' + profitClass + '">' + roi.toFixed(2) + '%</div><div class="bc-explanation">Return on Investment<br>' + (bonusType === 'freebet' ? 'Based on bonus value invested' : 'Based on stake invested') + '</div></div>' +
+        '<div class="bc-result-item"><h3>Breakdown</h3><div class="bc-explanation" style="font-size: 1em;">Stake: ' + symbol + stake.toFixed(2) + '<br>Odds: ' + odds.toFixed(2) + '<br>Total Return if Win: ' + symbol + (stake * odds).toFixed(2) + '<br>' + (bonusType === 'freebet' ? 'Stake Deduction: -' + symbol + stake.toFixed(2) + '<br>' : '') + '<strong>Net Profit if Win: ' + symbol + netProfit.toFixed(2) + '</strong></div></div>' +
+        '<div class="bc-result-item"><h3>💡 Recommendation</h3><div class="bc-explanation" style="font-size: 1em;">' +
+        (bonusType === 'freebet' && odds < 2.0 ? '⚠ Consider using higher odds (2.00-3.00) for better free bet conversion' :
+         bonusType === 'freebet' && odds >= 2.0 && odds <= 3.5 ? '✓ Good odds range for free bet conversion' :
+         bonusType === 'freebet' && odds > 3.5 ? '⚠ High odds - lower win probability but better value retention' :
+         '✓ Cash bonus - full value retained on win') + '</div></div>';
+}
+
+function bcCalculateHedge() {
+    var bet1Odds = parseFloat(document.getElementById('bc-bet1-odds').value);
+    var bet1Type = document.getElementById('bc-bet1-type').value;
+    var bet1Amount = parseFloat(document.getElementById('bc-bet1-amount').value) || 0;
+    var bet1Currency = document.getElementById('bc-bet1-currency').value;
+    var betXOdds = parseFloat(document.getElementById('bc-betx-odds').value);
+    var betXType = document.getElementById('bc-betx-type').value;
+    var betXAmount = parseFloat(document.getElementById('bc-betx-amount').value) || 0;
+    var betXCurrency = document.getElementById('bc-betx-currency').value;
+    var bet2Odds = parseFloat(document.getElementById('bc-bet2-odds').value);
+    var bet2Type = document.getElementById('bc-bet2-type').value;
+    var bet2Amount = parseFloat(document.getElementById('bc-bet2-amount').value) || 0;
+    var bet2Currency = document.getElementById('bc-bet2-currency').value;
+    var bet1Active = bet1Amount > 0 && bet1Odds >= 1.01;
+    var betXActive = betXAmount > 0 && betXOdds >= 1.01;
+    var bet2Active = bet2Amount > 0 && bet2Odds >= 1.01;
+    var activeBets = [bet1Active, betXActive, bet2Active].filter(Boolean).length;
+    if (activeBets < 2) { alert('Please enter valid values for at least 2 bets!'); return; }
+    var bet1AmountEUR = bet1Active ? (bet1Currency === 'USD' ? bet1Amount / bcExchangeRate : bet1Amount) : 0;
+    var betXAmountEUR = betXActive ? (betXCurrency === 'USD' ? betXAmount / bcExchangeRate : betXAmount) : 0;
+    var bet2AmountEUR = bet2Active ? (bet2Currency === 'USD' ? bet2Amount / bcExchangeRate : bet2Amount) : 0;
+    var totalInvestment = 0;
+    if (bet1Active && bet1Type === 'cash') totalInvestment += bet1AmountEUR;
+    if (betXActive && betXType === 'cash') totalInvestment += betXAmountEUR;
+    if (bet2Active && bet2Type === 'cash') totalInvestment += bet2AmountEUR;
+    var scenarios = [];
+    if (bet1Active) {
+        var profit1 = 0;
+        if (bet1Type === 'freebet') profit1 += (bet1AmountEUR * bet1Odds) - bet1AmountEUR;
+        else profit1 += (bet1AmountEUR * bet1Odds);
+        if (betXActive && betXType === 'cash') profit1 -= betXAmountEUR;
+        if (bet2Active && bet2Type === 'cash') profit1 -= bet2AmountEUR;
+        scenarios.push({ name: 'Bet 1 Wins (Home)', profit: profit1, winBet: 'Bet 1', winAmount: bet1AmountEUR, winOdds: bet1Odds, winType: bet1Type,
+            lossBets: [ betXActive ? { name: 'Bet X', amount: betXAmountEUR, type: betXType } : null, bet2Active ? { name: 'Bet 2', amount: bet2AmountEUR, type: bet2Type } : null ].filter(Boolean) });
+    }
+    if (betXActive) {
+        var profitX = 0;
+        if (betXType === 'freebet') profitX += (betXAmountEUR * betXOdds) - betXAmountEUR;
+        else profitX += (betXAmountEUR * betXOdds);
+        if (bet1Active && bet1Type === 'cash') profitX -= bet1AmountEUR;
+        if (bet2Active && bet2Type === 'cash') profitX -= bet2AmountEUR;
+        scenarios.push({ name: 'Bet X Wins (Draw)', profit: profitX, winBet: 'Bet X', winAmount: betXAmountEUR, winOdds: betXOdds, winType: betXType,
+            lossBets: [ bet1Active ? { name: 'Bet 1', amount: bet1AmountEUR, type: bet1Type } : null, bet2Active ? { name: 'Bet 2', amount: bet2AmountEUR, type: bet2Type } : null ].filter(Boolean) });
+    }
+    if (bet2Active) {
+        var profit2 = 0;
+        if (bet2Type === 'freebet') profit2 += (bet2AmountEUR * bet2Odds) - bet2AmountEUR;
+        else profit2 += (bet2AmountEUR * bet2Odds);
+        if (bet1Active && bet1Type === 'cash') profit2 -= bet1AmountEUR;
+        if (betXActive && betXType === 'cash') profit2 -= betXAmountEUR;
+        scenarios.push({ name: 'Bet 2 Wins (Away)', profit: profit2, winBet: 'Bet 2', winAmount: bet2AmountEUR, winOdds: bet2Odds, winType: bet2Type,
+            lossBets: [ bet1Active ? { name: 'Bet 1', amount: bet1AmountEUR, type: bet1Type } : null, betXActive ? { name: 'Bet X', amount: betXAmountEUR, type: betXType } : null ].filter(Boolean) });
+    }
+    var profits = scenarios.map(function(s){ return s.profit; });
+    var minProfit = Math.min.apply(null, profits);
+    var maxProfit = Math.max.apply(null, profits);
+    var avgProfit = profits.reduce(function(a,b){ return a+b; }, 0) / profits.length;
+    var minSymbol = minProfit >= 0 ? '🟢' : '🔴';
+    var avgClass = avgProfit >= 0 ? 'bc-profit-positive' : 'bc-profit-negative';
+    var scenariosHTML = '';
+    scenarios.forEach(function(scenario) {
+        var profitClass = scenario.profit >= 0 ? 'bc-profit-positive' : 'bc-profit-negative';
+        var profitSymbol = scenario.profit >= 0 ? '🟢' : '🔴';
+        var winReturn = scenario.winType === 'freebet' ? ((scenario.winAmount * scenario.winOdds) - scenario.winAmount).toFixed(2) : (scenario.winAmount * scenario.winOdds).toFixed(2);
+        var lossesHTML = '';
+        scenario.lossBets.forEach(function(lb){ lossesHTML += lb.name + ' Loss: ' + (lb.type === 'cash' ? '-€' + lb.amount.toFixed(2) : '€0.00 (Free Bet)') + '<br>'; });
+        scenariosHTML += '<div class="bc-result-item"><h3>Scenario: ' + scenario.name + ' ' + profitSymbol + '</h3><div class="bc-result-value ' + profitClass + '">€' + scenario.profit.toFixed(2) + '</div><div class="bc-explanation">' + scenario.winBet + ' Return: €' + winReturn + '<br>' + (scenario.winType === 'freebet' ? '(Free Bet - stake not returned)<br>' : '(Cash - stake returned)<br>') + lossesHTML + '</div></div>';
+    });
+    var activeBetsHTML = '';
+    if (bet1Active) activeBetsHTML += '<strong>Bet 1:</strong> €' + bet1AmountEUR.toFixed(2) + ' @ ' + bet1Odds.toFixed(2) + ' (' + (bet1Type === 'freebet' ? 'Free Bet' : 'Cash') + ')' + (bet1Currency === 'USD' ? ' - Originally $' + bet1Amount.toFixed(2) : '') + '<br>';
+    if (betXActive) activeBetsHTML += '<strong>Bet X:</strong> €' + betXAmountEUR.toFixed(2) + ' @ ' + betXOdds.toFixed(2) + ' (' + (betXType === 'freebet' ? 'Free Bet' : 'Cash') + ')' + (betXCurrency === 'USD' ? ' - Originally $' + betXAmount.toFixed(2) : '') + '<br>';
+    if (bet2Active) activeBetsHTML += '<strong>Bet 2:</strong> €' + bet2AmountEUR.toFixed(2) + ' @ ' + bet2Odds.toFixed(2) + ' (' + (bet2Type === 'freebet' ? 'Free Bet' : 'Cash') + ')' + (bet2Currency === 'USD' ? ' - Originally $' + bet2Amount.toFixed(2) : '') + '<br>';
+    var resultsDiv = document.getElementById('bc-hedgeResults');
+    resultsDiv.style.display = 'block';
+    resultsDiv.innerHTML =
+        '<div class="bc-result-item"><h3>Betting Structure</h3><div class="bc-result-value bc-neutral">' + activeBets + '-Way Betting</div><div class="bc-explanation">' + (activeBets === 2 ? 'Two-way hedge strategy' : 'Three-way hedge strategy (1-X-2)') + '</div></div>' +
+        '<div class="bc-result-item"><h3>Total Investment (Cash Only)</h3><div class="bc-result-value bc-neutral">€' + totalInvestment.toFixed(2) + '</div><div class="bc-explanation">' +
+        (bet1Active ? 'Bet 1: ' + (bet1Type === 'cash' ? '€' + bet1AmountEUR.toFixed(2) : '€0.00 (Free Bet)') + '<br>' : '') +
+        (betXActive ? 'Bet X: ' + (betXType === 'cash' ? '€' + betXAmountEUR.toFixed(2) : '€0.00 (Free Bet)') + '<br>' : '') +
+        (bet2Active ? 'Bet 2: ' + (bet2Type === 'cash' ? '€' + bet2AmountEUR.toFixed(2) : '€0.00 (Free Bet)') : '') + '</div></div>' +
+        scenariosHTML +
+        '<div class="bc-result-item"><h3>Summary Statistics</h3><div class="bc-explanation" style="font-size: 1em;"><strong>Worst Case ' + minSymbol + ':</strong> €' + minProfit.toFixed(2) + '<br><strong>Best Case 🟢:</strong> €' + maxProfit.toFixed(2) + '<br><strong>Average Profit:</strong> <span class="' + avgClass + '">€' + avgProfit.toFixed(2) + '</span><br><strong>Profit Range:</strong> €' + (maxProfit - minProfit).toFixed(2) + '</div></div>' +
+        '<div class="bc-result-item"><h3>💡 Strategy Analysis</h3><div class="bc-explanation" style="font-size: 1em;">' +
+        (minProfit >= 0 ? '✓ <strong>Guaranteed Profit!</strong> All scenarios are profitable. This is an arbitrage opportunity!' :
+         minProfit >= -5 ? '⚠ <strong>Low Risk:</strong> Worst case is a small loss. Consider adjusting stakes for guaranteed profit.' :
+         '❌ <strong>High Risk:</strong> Significant loss possible in worst scenario. Review your bet sizing.') +
+        '<br><br>' + (totalInvestment === 0 ? '✓ <strong>Risk-Free:</strong> All free bets - no cash at risk!' : '<strong>Cash at Risk:</strong> €' + totalInvestment.toFixed(2)) +
+        '<br><br><strong>ROI on Investment:</strong> ' + (totalInvestment > 0 ? ((avgProfit / totalInvestment) * 100).toFixed(2) + '%' : 'N/A (No cash invested)') + '</div></div>' +
+        '<div class="bc-result-item"><h3>📊 Active Bets (Converted to EUR)</h3><div class="bc-explanation" style="font-size: 0.95em;">' + activeBetsHTML +
+        (bet1Currency === 'USD' || betXCurrency === 'USD' || bet2Currency === 'USD' ? '<br><em>Exchange Rate Used: 1 EUR = ' + bcExchangeRate.toFixed(4) + ' USD</em>' : '') + '</div></div>';
+}
+
+function bcCalculateBreakEven() {
+    var mainOdds = parseFloat(document.getElementById('bc-be-main-odds').value);
+    var mainType = document.getElementById('bc-be-main-type').value;
+    var mainAmount = parseFloat(document.getElementById('bc-be-main-amount').value);
+    var mainCurrency = document.getElementById('bc-be-main-currency').value;
+    var odds2 = parseFloat(document.getElementById('bc-be-odds2').value);
+    var odds3 = parseFloat(document.getElementById('bc-be-odds3').value) || 0;
+    var outputCurrency = document.getElementById('bc-be-output-currency').value;
+    var outputSymbol = outputCurrency === 'EUR' ? '€' : '$';
+    if (!mainOdds || !mainAmount || !odds2 || mainOdds < 1.01 || odds2 < 1.01) { alert('Please enter valid odds and amount for your main bet and at least one other outcome!'); return; }
+    if (odds3 > 0 && odds3 < 1.01) { alert('Outcome 3 odds must be at least 1.01 or leave at 0 for 2-way betting!'); return; }
+    var mainAmountEUR = mainCurrency === 'USD' ? mainAmount / bcExchangeRate : mainAmount;
+    var is3Way = odds3 > 0;
+    var mainReturn;
+    if (mainType === 'freebet') mainReturn = (mainAmountEUR * mainOdds) - mainAmountEUR;
+    else mainReturn = (mainAmountEUR * mainOdds);
+    var stake2, stake3, totalInvestment;
+    if (is3Way) {
+        var targetPayout = mainReturn;
+        stake2 = targetPayout / odds2;
+        stake3 = targetPayout / odds3;
+        totalInvestment = stake2 + stake3;
+        if (mainType === 'cash') totalInvestment += mainAmountEUR;
+    } else {
+        stake2 = mainReturn / (odds2 - 1);
+        stake3 = 0;
+        totalInvestment = stake2;
+        if (mainType === 'cash') totalInvestment += mainAmountEUR;
+    }
+    var conversionRate = outputCurrency === 'USD' ? bcExchangeRate : 1;
+    var mainAmountOutput = mainAmountEUR * conversionRate;
+    var stake2Output = stake2 * conversionRate;
+    var stake3Output = stake3 * conversionRate;
+    var totalInvestmentOutput = totalInvestment * conversionRate;
+    var mainReturnOutput = mainReturn * conversionRate;
+    var scenario1Profit, scenario2Profit, scenario3Profit;
+    if (is3Way) {
+        scenario1Profit = mainReturn - stake2 - stake3;
+        scenario2Profit = (stake2 * odds2) - stake2 - stake3 - (mainType === 'cash' ? mainAmountEUR : 0);
+        scenario3Profit = (stake3 * odds3) - stake2 - stake3 - (mainType === 'cash' ? mainAmountEUR : 0);
+    } else {
+        scenario1Profit = mainReturn - stake2;
+        scenario2Profit = (stake2 * odds2) - stake2 - (mainType === 'cash' ? mainAmountEUR : 0);
+        scenario3Profit = 0;
+    }
+    var scenario1Output = scenario1Profit * conversionRate;
+    var scenario2Output = scenario2Profit * conversionRate;
+    var scenario3Output = scenario3Profit * conversionRate;
+    var resultsDiv = document.getElementById('bc-breakevenResults');
+    resultsDiv.style.display = 'block';
+    var scenariosHTML = '';
+    scenariosHTML += '<div class="bc-result-item"><h3>Scenario 1: Main Bet Wins</h3><div class="bc-result-value ' + (scenario1Output >= -0.01 && scenario1Output <= 0.01 ? 'bc-neutral' : scenario1Output > 0 ? 'bc-profit-positive' : 'bc-profit-negative') + '">' + outputSymbol + scenario1Output.toFixed(2) + '</div><div class="bc-explanation">Main Bet Return: ' + outputSymbol + mainReturnOutput.toFixed(2) + '<br>' + (mainType === 'freebet' ? '(Free Bet - stake not returned)<br>' : '(Cash - stake returned)<br>') + 'Hedge Loss: -' + outputSymbol + (stake2Output + stake3Output).toFixed(2) + '</div></div>';
+    scenariosHTML += '<div class="bc-result-item"><h3>Scenario 2: Outcome 2 Wins</h3><div class="bc-result-value ' + (scenario2Output >= -0.01 && scenario2Output <= 0.01 ? 'bc-neutral' : scenario2Output > 0 ? 'bc-profit-positive' : 'bc-profit-negative') + '">' + outputSymbol + scenario2Output.toFixed(2) + '</div><div class="bc-explanation">Outcome 2 Return: ' + outputSymbol + (stake2Output * odds2).toFixed(2) + '<br>Stake 2: -' + outputSymbol + stake2Output.toFixed(2) + '<br>' + (is3Way ? 'Stake 3 Loss: -' + outputSymbol + stake3Output.toFixed(2) + '<br>' : '') + (mainType === 'cash' ? 'Main Bet Loss: -' + outputSymbol + mainAmountOutput.toFixed(2) : 'Main Bet Loss: €0.00 (Free Bet)') + '</div></div>';
+    if (is3Way) {
+        scenariosHTML += '<div class="bc-result-item"><h3>Scenario 3: Outcome 3 Wins</h3><div class="bc-result-value ' + (scenario3Output >= -0.01 && scenario3Output <= 0.01 ? 'bc-neutral' : scenario3Output > 0 ? 'bc-profit-positive' : 'bc-profit-negative') + '">' + outputSymbol + scenario3Output.toFixed(2) + '</div><div class="bc-explanation">Outcome 3 Return: ' + outputSymbol + (stake3Output * odds3).toFixed(2) + '<br>Stake 2 Loss: -' + outputSymbol + stake2Output.toFixed(2) + '<br>Stake 3: -' + outputSymbol + stake3Output.toFixed(2) + '<br>' + (mainType === 'cash' ? 'Main Bet Loss: -' + outputSymbol + mainAmountOutput.toFixed(2) : 'Main Bet Loss: €0.00 (Free Bet)') + '</div></div>';
+    }
+    resultsDiv.innerHTML =
+        '<div class="bc-result-item"><h3>' + (is3Way ? '3-Way' : '2-Way') + ' Break-Even Stakes</h3><div class="bc-result-value bc-neutral">Perfect Hedge</div><div class="bc-explanation">Calculated for ' + outputSymbol + '0.00 profit/loss in all scenarios</div></div>' +
+        '<div class="bc-result-item"><h3>Required Stakes</h3><div class="bc-explanation" style="font-size: 1.1em;"><strong>Main Bet:</strong> ' + outputSymbol + mainAmountOutput.toFixed(2) + ' @ ' + mainOdds.toFixed(2) + ' (' + (mainType === 'freebet' ? 'Free Bet' : 'Cash') + ')' + (mainCurrency !== outputCurrency ? ' - Originally ' + (mainCurrency === 'USD' ? '$' : '€') + mainAmount.toFixed(2) : '') + '<br><strong>Outcome 2 Stake:</strong> ' + outputSymbol + stake2Output.toFixed(2) + ' @ ' + odds2.toFixed(2) + '<br>' + (is3Way ? '<strong>Outcome 3 Stake:</strong> ' + outputSymbol + stake3Output.toFixed(2) + ' @ ' + odds3.toFixed(2) + '<br>' : '') + '</div></div>' +
+        '<div class="bc-result-item"><h3>Total Cash Investment</h3><div class="bc-result-value ' + (totalInvestment > 0 ? 'bc-neutral' : 'bc-profit-positive') + '">' + outputSymbol + totalInvestmentOutput.toFixed(2) + '</div><div class="bc-explanation">' + (mainType === 'cash' ? 'Main Bet: ' + outputSymbol + mainAmountOutput.toFixed(2) + '<br>' : 'Main Bet: €0.00 (Free Bet)<br>') + 'Outcome 2: ' + outputSymbol + stake2Output.toFixed(2) + '<br>' + (is3Way ? 'Outcome 3: ' + outputSymbol + stake3Output.toFixed(2) + '<br>' : '') + '<br>' + (totalInvestment === 0 ? '✓ <strong>No cash needed - risk free!</strong>' : '') + '</div></div>' +
+        scenariosHTML +
+        '<div class="bc-result-item"><h3>💡 Break-Even Analysis</h3><div class="bc-explanation" style="font-size: 1em;">' +
+        (Math.abs(scenario1Output) < 0.50 && Math.abs(scenario2Output) < 0.50 && (!is3Way || Math.abs(scenario3Output) < 0.50) ? '✓ <strong>Perfect Break-Even!</strong> All scenarios result in approximately €0 profit/loss.' : '⚠ <strong>Near Break-Even:</strong> Small variations due to rounding. Adjust stakes slightly if needed.') +
+        '<br><br><strong>Decision Guide:</strong><br>• Total investment needed: ' + outputSymbol + totalInvestmentOutput.toFixed(2) + '<br>• Main bet value: ' + outputSymbol + mainAmountOutput.toFixed(2) + '<br>• Additional cash required: ' + outputSymbol + (totalInvestmentOutput - (mainType === 'cash' ? mainAmountOutput : 0)).toFixed(2) + '<br><br>' +
+        (totalInvestment < mainAmountEUR * 0.3 ? '✓ <strong>Good Value:</strong> Low hedge cost relative to bonus value!' :
+         totalInvestment < mainAmountEUR * 0.8 ? '⚠ <strong>Moderate Cost:</strong> Consider if break-even is worth the effort.' :
+         '❌ <strong>High Cost:</strong> Hedging requires significant investment.') + '</div></div>';
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BETTING ANALYZER (bb-prefix)
+   ═══════════════════════════════════════════════════════════════ */
+function bbSwitchTab(tabName, evt) {
+    document.querySelectorAll('#bk-betting .bb-tab-content').forEach(function(c){ c.classList.remove('active'); });
+    document.querySelectorAll('#bk-betting .bb-tabs .bb-tab').forEach(function(t){ t.classList.remove('active'); });
+    document.getElementById('bb-' + tabName).classList.add('active');
+    if (evt && evt.currentTarget) evt.currentTarget.classList.add('active');
+}
+
+function bbPoissonProbability(lambda, k) { return (Math.pow(lambda, k) * Math.exp(-lambda)) / bbFactorial(k); }
+function bbFactorial(n) { if (n === 0 || n === 1) return 1; var result = 1; for (var i = 2; i <= n; i++) result *= i; return result; }
+
+function bbCalculatePoisson() {
+    var avgA = parseFloat(document.getElementById('bb-avgPointsA').value);
+    var avgB = parseFloat(document.getElementById('bb-avgPointsB').value);
+    var ouLine = parseFloat(document.getElementById('bb-ouLine').value);
+    var handicap = parseFloat(document.getElementById('bb-handicap').value);
+    var totalAvg = avgA + avgB;
+    var overProb = 0;
+    for (var i = Math.ceil(ouLine); i <= totalAvg + 50; i++) overProb += bbPoissonProbability(totalAvg, i);
+    var underProb = 1 - overProb;
+    var spreadDiff = avgA - avgB;
+    var winProb = spreadDiff > Math.abs(handicap) ? 0.65 : 0.35;
+    var impliedOddsOver = (1 / overProb).toFixed(2);
+    var impliedOddsUnder = (1 / underProb).toFixed(2);
+    var resultsDiv = document.getElementById('bb-poissonResults');
+    resultsDiv.style.display = 'block';
+    resultsDiv.innerHTML =
+        '<div class="bb-result-item"><h3>Predicted Total</h3><div class="bb-result-value">' + totalAvg.toFixed(1) + ' points</div><div class="bb-explanation">Expected total points based on averages</div></div>' +
+        '<div class="bb-result-item"><h3>Over ' + ouLine + ' Probability</h3><div class="bb-result-value ' + (overProb > 0.5 ? 'bb-positive' : 'bb-negative') + '">' + (overProb * 100).toFixed(1) + '%</div><div class="bb-explanation">Implied odds: ' + impliedOddsOver + ' | Fair value at this probability</div></div>' +
+        '<div class="bb-result-item"><h3>Under ' + ouLine + ' Probability</h3><div class="bb-result-value ' + (underProb > 0.5 ? 'bb-positive' : 'bb-negative') + '">' + (underProb * 100).toFixed(1) + '%</div><div class="bb-explanation">Implied odds: ' + impliedOddsUnder + ' | Fair value at this probability</div></div>' +
+        '<div class="bb-result-item"><h3>Handicap Analysis (' + (handicap > 0 ? '+' : '') + handicap + ')</h3><div class="bb-result-value bb-neutral">' + (winProb * 100).toFixed(1) + '%</div><div class="bb-explanation">Expected difference: ' + spreadDiff.toFixed(1) + ' points<br>Handicap: ' + handicap + ' | ' + (spreadDiff > Math.abs(handicap) ? 'Favorite covers' : 'Underdog covers') + '</div></div>';
+}
+
+function bbCalculateELO() {
+    var eloA = parseFloat(document.getElementById('bb-eloA').value);
+    var eloB = parseFloat(document.getElementById('bb-eloB').value);
+    var homeAdv = parseFloat(document.getElementById('bb-homeAdvantage').value);
+    var odds = parseFloat(document.getElementById('bb-oddsA').value);
+    var adjustedEloA = eloA + homeAdv;
+    var expectedA = 1 / (1 + Math.pow(10, (eloB - adjustedEloA) / 400));
+    var expectedB = 1 - expectedA;
+    var impliedProb = 1 / odds;
+    var edge = expectedA - impliedProb;
+    var resultsDiv = document.getElementById('bb-eloResults');
+    resultsDiv.style.display = 'block';
+    resultsDiv.innerHTML =
+        '<div class="bb-result-item"><h3>ELO Probability Team A</h3><div class="bb-result-value ' + (expectedA > 0.5 ? 'bb-positive' : 'bb-negative') + '">' + (expectedA * 100).toFixed(1) + '%</div><div class="bb-explanation">Base ELO: ' + eloA + ' + Home Advantage: ' + homeAdv + ' = ' + adjustedEloA + '<br>Implied fair odds: ' + (1 / expectedA).toFixed(2) + '</div></div>' +
+        '<div class="bb-result-item"><h3>ELO Probability Team B</h3><div class="bb-result-value ' + (expectedB > 0.5 ? 'bb-positive' : 'bb-negative') + '">' + (expectedB * 100).toFixed(1) + '%</div><div class="bb-explanation">Base ELO: ' + eloB + '<br>Implied fair odds: ' + (1 / expectedB).toFixed(2) + '</div></div>' +
+        '<div class="bb-result-item"><h3>Value Analysis</h3><div class="bb-result-value ' + (edge > 0 ? 'bb-positive' : 'bb-negative') + '">' + (edge > 0 ? '+' : '') + (edge * 100).toFixed(2) + '% Edge</div><div class="bb-explanation">Bookmaker probability: ' + (impliedProb * 100).toFixed(1) + '%<br>ELO probability: ' + (expectedA * 100).toFixed(1) + '%<br>' + (edge > 0 ? '✓ There is value in this bet!' : '✗ No value - skip') + '</div></div>';
+}
+
+function bbCalculateValue() {
+    var prob = parseFloat(document.getElementById('bb-trueProbability').value) / 100;
+    var odds = parseFloat(document.getElementById('bb-bookmakerOdds').value);
+    var bankroll = parseFloat(document.getElementById('bb-bankroll').value);
+    var expectedValue = (prob * odds) - 1;
+    var roi = expectedValue * 100;
+    var impliedProb = 1 / odds;
+    var probDiff = prob - impliedProb;
+    var resultsDiv = document.getElementById('bb-valueResults');
+    resultsDiv.style.display = 'block';
+    resultsDiv.innerHTML =
+        '<div class="bb-result-item"><h3>Expected Value (EV)</h3><div class="bb-result-value ' + (expectedValue > 0 ? 'bb-positive' : 'bb-negative') + '">' + (expectedValue > 0 ? '+' : '') + (expectedValue * 100).toFixed(2) + '%</div><div class="bb-explanation">For every $100 bet, expected result: ' + (expectedValue > 0 ? '+' : '') + '$' + (expectedValue * 100).toFixed(2) + '</div></div>' +
+        '<div class="bb-result-item"><h3>Probability Difference</h3><div class="bb-result-value ' + (probDiff > 0 ? 'bb-positive' : 'bb-negative') + '">' + (probDiff > 0 ? '+' : '') + (probDiff * 100).toFixed(2) + '%</div><div class="bb-explanation">Bookmaker: ' + (impliedProb * 100).toFixed(1) + '% | Your estimate: ' + (prob * 100).toFixed(1) + '%<br>' + (probDiff > 0.03 ? '✓ Significant value!' : probDiff > 0 ? '✓ Has value' : '✗ Negative value') + '</div></div>' +
+        '<div class="bb-result-item"><h3>ROI Forecast</h3><div class="bb-result-value ' + (roi > 0 ? 'bb-positive' : 'bb-negative') + '">' + (roi > 0 ? '+' : '') + roi.toFixed(2) + '%</div><div class="bb-explanation">Expected return on investment (ROI)<br>' + (roi > 5 ? 'Excellent ROI!' : roi > 0 ? 'Positive ROI' : 'Negative ROI - avoid') + '</div></div>' +
+        '<div class="bb-result-item"><h3>Recommendation</h3><div class="bb-result-value bb-neutral">' + (expectedValue > 0.05 ? '✓ BET' : expectedValue > 0 ? '⚠ Small value' : '✗ SKIP') + '</div><div class="bb-explanation">' + (expectedValue > 0.05 ? 'Good value! Stake size: see Kelly calculator' : expectedValue > 0 ? 'Minimal value - bet small or skip' : 'Negative value - do not bet') + '</div></div>';
+}
+
+function bbCalculateKelly() {
+    var prob = parseFloat(document.getElementById('bb-kellyProb').value) / 100;
+    var odds = parseFloat(document.getElementById('bb-kellyOdds').value);
+    var bankroll = parseFloat(document.getElementById('bb-kellyBankroll').value);
+    var fraction = parseFloat(document.getElementById('bb-kellyFraction').value);
+    var q = odds - 1;
+    var kelly = ((prob * q) - (1 - prob)) / q;
+    var adjustedKelly = kelly * fraction;
+    var betSize = Math.max(0, adjustedKelly * bankroll);
+    var expectedValue = (prob * odds) - 1;
+    var expectedProfit = betSize * expectedValue;
+    var resultsDiv = document.getElementById('bb-kellyResults');
+    resultsDiv.style.display = 'block';
+    if (kelly <= 0) {
+        resultsDiv.innerHTML = '<div class="bb-result-item"><h3>⚠ Warning!</h3><div class="bb-result-value bb-negative">DO NOT BET</div><div class="bb-explanation">Kelly formula shows negative value.<br>This means the bet has no positive expected value.<br>At these conditions (' + (prob*100).toFixed(1) + '% @ ' + odds + ') it makes no mathematical sense.</div></div>';
+        return;
+    }
+    resultsDiv.innerHTML =
+        '<div class="bb-result-item"><h3>Kelly % (' + (fraction === 1 ? 'Full' : fraction === 0.5 ? 'Half' : 'Quarter') + ')</h3><div class="bb-result-value ' + (kelly > 0.1 ? 'bb-positive' : kelly > 0.05 ? 'bb-neutral' : 'bb-negative') + '">' + (adjustedKelly * 100).toFixed(2) + '%</div><div class="bb-explanation">Full Kelly: ' + (kelly * 100).toFixed(2) + '% | Applied fraction: ' + fraction * 100 + '%<br>' + (adjustedKelly > 0.1 ? '⚠ High % - be careful!' : 'Conservative approach') + '</div></div>' +
+        '<div class="bb-result-item"><h3>Optimal Stake Size</h3><div class="bb-result-value bb-positive">$' + betSize.toFixed(2) + '</div><div class="bb-explanation">From bankroll: $' + bankroll + '<br>Percentage: ' + (adjustedKelly * 100).toFixed(2) + '%</div></div>' +
+        '<div class="bb-result-item"><h3>Expected Profit</h3><div class="bb-result-value ' + (expectedProfit > 0 ? 'bb-positive' : 'bb-negative') + '">' + (expectedProfit > 0 ? '+' : '') + '$' + expectedProfit.toFixed(2) + '</div><div class="bb-explanation">EV: ' + (expectedValue * 100).toFixed(2) + '%<br>Expected result from this bet</div></div>' +
+        '<div class="bb-result-item"><h3>Risk Analysis</h3><div class="bb-result-value bb-neutral">Win: ' + (prob * 100).toFixed(1) + '% | Lose: ' + ((1-prob) * 100).toFixed(1) + '%</div><div class="bb-explanation">If you win: +$' + (betSize * (odds - 1)).toFixed(2) + '<br>If you lose: -$' + betSize.toFixed(2) + '<br>' + (adjustedKelly < 0.05 ? '✓ Low risk' : adjustedKelly < 0.1 ? '⚠ Moderate risk' : '⚠⚠ High risk - reduce fraction!') + '</div></div>' +
+        '<div class="bb-result-item"><h3>💡 Recommendations</h3><div class="bb-explanation" style="font-size: 1em;">' + (fraction === 1 ? '⚠ Full Kelly is aggressive. Consider Half Kelly for lower volatility.' : '✓ Conservative approach reduces volatility.') + '<br><br><strong>After bet:</strong><br>• New bankroll if win: $' + (bankroll + betSize * (odds - 1)).toFixed(2) + '<br>• New bankroll if loss: $' + (bankroll - betSize).toFixed(2) + '</div></div>';
+}
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "basketbol-eu",
+  "version": "1.0.0",
+  "description": "basketbol.eu — Eleventy static site",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx @11ty/eleventy --serve --port=8080",
+    "build": "npx @11ty/eleventy",
+    "clean": "rm -rf _site"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@11ty/eleventy": "^3.1.5"
+  }
+}

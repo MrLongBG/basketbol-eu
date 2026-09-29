@@ -1,0 +1,93 @@
+---
+layout: base.njk
+---
+<article class="post">
+  <div class="content post-content">
+
+    <header class="post-header">
+      <div class="post-tags">
+        {% if category %}<span class="post-tag post-tag-primary">{{ category }}</span>{% endif %}
+        {% for tag in tags %}{% if tag != "posts" %}<span class="post-tag">{{ tag }}</span>{% endif %}{% endfor %}
+      </div>
+      <h1 class="post-title">{{ title }}</h1>
+      <div class="post-meta">
+        <a href="{{ site.linkedin }}" target="_blank" rel="noopener">{{ site.author }}</a>
+        <span class="post-meta-sep">·</span>
+        <span>{{ page.date | dateEN }}</span>
+        {% if readTime %}
+        <span class="post-meta-sep">·</span>
+        <span>{{ readTime }} min read</span>
+        {% endif %}
+      </div>
+    </header>
+
+    {% if heroImage %}
+    <div class="post-hero">
+      <img src="{{ heroImage }}" alt="{{ heroImageAlt if heroImageAlt else title }}">
+      {% if heroImageCredit %}
+      <p class="post-hero-credit">Photo: <a href="{{ heroImageCredit.url }}" target="_blank" rel="noopener">{{ heroImageCredit.author }}</a> / {{ heroImageCredit.source }}</p>
+      {% endif %}
+    </div>
+    {% else %}
+    <div class="post-hero post-hero-placeholder">
+      <span class="post-hero-icon">🏀</span>
+    </div>
+    {% endif %}
+
+    <div class="post-body">
+      {{ content | safe }}
+    </div>
+
+    <div class="post-share">
+      <span class="share-label">Share</span>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://{{ site.domain }}{{ page.url }}" target="_blank" rel="noopener">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=https://{{ site.domain }}{{ page.url }}&text={{ title }}" target="_blank" rel="noopener">X</a>
+      <a href="https://t.me/share/url?url=https://{{ site.domain }}{{ page.url }}&text={{ title }}" target="_blank" rel="noopener">Telegram</a>
+    </div>
+
+    <div class="post-author">
+      <div class="post-author-avatar">{{ site.author | slice(0, 2) }}</div>
+      <div>
+        <div class="post-author-name"><a href="{{ site.linkedin }}" target="_blank" rel="noopener">{{ site.author }}</a></div>
+        <div class="post-author-bio">40 years of basketball · 30 professional · 20 in club management · MSc IT. Founder of BETON Agent.</div>
+      </div>
+    </div>
+
+    {% set related = collections.posts | reverse | related(page.url, 2) %}
+    {% if related.length > 0 %}
+    <div class="post-related">
+      <div class="section-label">— Related</div>
+      <div class="post-list">
+        {% for p in related %}
+        <a href="{{ p.url }}" class="post-card post-card-sm">
+          <div class="post-thumb">
+            {% if p.data.heroImage %}
+              <img src="{{ p.data.heroImage }}" alt="{{ p.data.heroImageAlt or p.data.title }}" loading="lazy">
+            {% else %}
+              <span class="post-thumb-icon">🏀</span>
+            {% endif %}
+          </div>
+          <div class="post-body">
+            <div class="post-meta">
+              {% if p.data.category %}<span class="post-tag post-tag-primary">{{ p.data.category }}</span>{% endif %}
+              <span>{{ p.date | dateEN }}</span>
+            </div>
+            <h3 class="post-card-title">{{ p.data.title }}</h3>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="vip-banner vip-banner-compact">
+      <div>
+        <div class="kicker">CAPPED AT 69 MEMBERS</div>
+        <h2>Want these signals in your inbox?</h2>
+        <p class="sub">Join the wish list for early access</p>
+      </div>
+      <a href="/vip/" class="cta">Reserve →</a>
+    </div>
+
+  </div>
+</article>

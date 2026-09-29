@@ -1,0 +1,34 @@
+---
+layout: base.njk
+title: Research
+description: Case studies and methodology notes on quantitative sports analytics — data collection, model validation and predictive pipelines.
+permalink: /research/
+---
+<div class="content">
+
+  <h1 class="page-title">Research</h1>
+  <p class="lead">
+    How the system works — the architecture, the probability engine, the
+    market read and the discipline that holds it all together.
+  </p>
+
+  {% set sortedResearch = collections.research %}
+  {% if sortedResearch.length > 0 %}
+    <div class="post-list">
+      {% for post in sortedResearch %}
+      <a href="{{ post.url }}" class="post-card">
+        <div class="post-body">
+          <div class="post-meta">
+            <span>{{ post.date | dateEN }}</span>
+          </div>
+          <h3 class="post-card-title">{{ post.data.title }}</h3>
+          <p class="post-card-desc">{{ post.data.description }}</p>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p style="color: var(--text-muted); font-size: 14px;">Articles coming soon.</p>
+  {% endif %}
+
+</div>

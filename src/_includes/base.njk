@@ -1,0 +1,155 @@
+{% set t = i18n.en %}
+{% set nav_items = t.nav %}
+{% set friend_items = t.footer_friends_links %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% if title %}{{ title }} — {{ site.title }}{% else %}{{ site.title }} · {{ site.tagline }}{% endif %}</title>
+  <meta name="description" content="{{ description or site.tagline }}">
+
+  <meta property="og:type" content="{{ og_type or 'website' }}">
+  <meta property="og:title" content="{{ site.title }} | {% if title %}{{ title }}{% else %}{{ site.tagline }}{% endif %}">
+  <meta property="og:description" content="{{ description or site.tagline }}">
+  <meta property="og:url" content="https://{{ site.domain }}{{ page.url }}">
+  <meta property="og:site_name" content="{{ site.title }}">
+  <meta property="og:locale" content="en_US">
+  <link rel="alternate" hreflang="en" href="https://{{ site.domain }}{{ page.url }}">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ site.title }} | {% if title %}{{ title }}{% else %}{{ site.tagline }}{% endif %}">
+  <meta name="twitter:description" content="{{ description or site.tagline }}">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/site.css?v=7">
+
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon/basketball.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/favicon-180.png">
+  <link rel="shortcut icon" href="/assets/favicon/favicon.ico">
+
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1713459499773797');
+  fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1713459499773797&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Meta Pixel Code -->
+</head>
+<body>
+
+<header>
+  <div class="topbar">
+    <div></div>
+    <div class="social">
+      <a href="https://www.facebook.com/groups/1015845298868703" target="_blank" rel="noopener">Facebook</a>
+      <a href="mailto:{{ site.email }}">Email</a>
+    </div>
+  </div>
+
+  <div class="site-header">
+    <div class="site-header-brand">
+      <a href="/" class="site-logo">BASKETBOL<span class="accent">.EU</span></a>
+      <div class="site-tagline">{{ site.tagline }}</div>
+    </div>
+    <a href="https://books2read.com/u/mqYWL2" class="site-header-banner" target="_blank" rel="noopener" aria-label="The Blue Book — Read the book on Draft2Digital">
+      <div class="banner-label">THE BLUE BOOK</div>
+      <div class="banner-cities">{{ t.banner_cities }}</div>
+      <div class="banner-cta">{{ t.banner_cta }}</div>
+    </a>
+  </div>
+
+  <nav class="site-nav">
+    <div class="nav-inner">
+      {%- for item in nav_items -%}
+      <a href="{{ item.url }}"
+         class="{% if page.url == item.url %}active{% endif %} {% if item.highlight %}highlight{% endif %}"{% if 'http' in item.url %} target="_blank" rel="noopener"{% endif %}>{{ item.title }}</a>
+      {%- endfor -%}
+    </div>
+  </nav>
+
+  <div class="live-stats">
+    <div class="live-stats-inner">
+      <div class="live-stats-track">
+        <span class="dot"></span>
+        <span class="label">BETON AGENT · LIVE</span>
+        <span class="sep">│</span>
+        <span><span class="key">TIER WR</span> <span class="val" data-stat="win_rate">{{ stats.win_rate }}</span></span>
+        <span class="sep">│</span>
+        <span><span class="key">ROI</span> <span class="val hot" data-stat="roi">{{ stats.roi }}</span></span>
+        <span class="sep">│</span>
+        <span><span class="key">Games</span> <span class="val" data-stat="games_analyzed">{{ stats.games_analyzed }}</span></span>
+        <span class="sep">│</span>
+        <span><span class="key">{{ t.live_clv }}</span> <span class="val" data-stat="clv_vs_pinnacle">{{ stats.clv_vs_pinnacle }}</span></span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+{{ content | safe }}
+</main>
+
+<footer class="site-footer">
+  <div class="grid">
+    <a href="/services/" class="footer-vip-banner">
+      <h3>Services</h3>
+      <p>{{ t.footer_services_text }}</p>
+    </a>
+    <div>
+      <h3>{{ t.footer_contact }}</h3>
+      <p><a href="mailto:{{ site.email }}">{{ site.email }}</a><br>{{ site.domain }}</p>
+    </div>
+    <div>
+      <h3>{{ t.footer_friends }}</h3>
+      <p>
+        {%- for friend in friend_items -%}
+        <a href="{{ friend.url }}" target="_blank" rel="noopener">{{ friend.title }}</a>{% if not loop.last %}<br>{% endif %}
+        {%- endfor -%}
+      </p>
+    </div>
+  </div>
+  <div class="bottom-wrap">
+    <div class="bottom">
+      <div>© {{ site.year }} {{ site.domain }} · <a href="{{ site.linkedin }}" target="_blank" rel="noopener">{{ site.author }}</a></div>
+      <div><a href="/legal/" target="_blank" rel="noopener" class="legal-link">{{ t.footer_legal }}</a></div>
+      <span class="footer-cookie-notice">{{ t.footer_cookie }}</span>
+      <div>{{ t.footer_gamble }}</div>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+/* Live stats updater — fetches /api/stats.json without page reload */
+(function(){
+  fetch('/api/stats.json', {cache: 'no-store'})
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(s){
+      if (!s) return;
+      document.querySelectorAll('[data-stat]').forEach(function(el){
+        var k = el.dataset.stat;
+        if (s[k] !== undefined && s[k] !== null) el.textContent = s[k];
+      });
+    })
+    .catch(function(){ /* falls back to baked SSR values */ });
+})();
+</script>
+
+</body>
+</html>

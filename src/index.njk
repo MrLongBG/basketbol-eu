@@ -1,0 +1,68 @@
+---
+layout: base.njk
+title: Quantitative Sports Analytics
+description: Predictive models and data pipelines for European basketball. Systematic analysis and verified market edge.
+---
+<div class="content">
+
+  {% set sortedPosts = collections.posts | reverse %}
+  {% if sortedPosts.length > 0 %}
+    {% set featured = sortedPosts[0] %}
+    {% set rest = sortedPosts | after(1) | head(7) %}
+    {% set hasMore = sortedPosts.length > 8 %}
+
+    <div class="section-label">— Featured</div>
+    <a href="{{ featured.url }}" class="featured-card">
+      <div class="featured-image">
+        {% if featured.data.heroImage %}
+          <img src="{{ featured.data.heroImage }}" alt="{{ featured.data.heroImageAlt or featured.data.title }}" loading="lazy">
+        {% else %}
+          <span class="featured-image-icon">🏀</span>
+        {% endif %}
+        {% if featured.data.category %}<div class="featured-tag">{{ featured.data.category }}</div>{% endif %}
+      </div>
+      <div class="featured-body">
+        <div class="featured-date">{{ featured.date | dateEN }}</div>
+        <h2 class="featured-title">{{ featured.data.title }}</h2>
+        <p class="featured-desc">{{ featured.data.description }}</p>
+        <span class="featured-cta">Read →</span>
+      </div>
+    </a>
+
+    {% if rest.length > 0 %}
+    <div class="section-label" style="margin-top: 28px;">— Latest analyses</div>
+    <div class="post-list">
+      {% for post in rest %}
+      <a href="{{ post.url }}" class="post-card">
+        <div class="post-thumb">
+          {% if post.data.heroImage %}
+            <img src="{{ post.data.heroImage }}" alt="{{ post.data.heroImageAlt or post.data.title }}" loading="lazy">
+          {% else %}
+            <span class="post-thumb-icon">🏀</span>
+          {% endif %}
+        </div>
+        <div class="post-body">
+          <div class="post-meta">
+            {% if post.data.category %}<span class="post-tag post-tag-primary">{{ post.data.category }}</span>{% endif %}
+            <span>{{ post.date | dateEN }}</span>
+          </div>
+          <h3 class="post-card-title">{{ post.data.title }}</h3>
+          <p class="post-card-desc">{{ post.data.description }}</p>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if hasMore %}
+    <div class="see-more">
+      <a href="/posts/" class="see-more-link">See all articles →</a>
+    </div>
+    {% endif %}
+
+  {% else %}
+    <div class="section-label">— Articles coming soon</div>
+    <p style="color: var(--text-muted); font-size: 14px;">The site is live. The first articles will appear here in reverse chronological order.</p>
+  {% endif %}
+
+</div>
